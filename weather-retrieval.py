@@ -5,8 +5,8 @@ import time
 
 API_KEY = config.api_key
 API_ENDPOINT = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
-API_REQ_COUNT = 0 # CHANGE THIS VALUE TO YOUR OWN API_COUNT. YOU CAN FIND THIS BY GOING TO YOUR ACCOUNT CLICKING ON YOUR API KEY. IT WILL SHOW YOU YOUR API USAGE.
 DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
 class Weather:
     def __init__(self, date, city, state, avgHigh, avgLow, uvIndex, totalSunHours, avgSunHours, totalSnow, avgSnow):
         self.date = date
@@ -20,6 +20,11 @@ class Weather:
         self.totalSnow = totalSnow
         self.avgSnow = avgSnow
 
+def get_api_count():
+    file = open("api_count.txt", "r")
+    api_count = file.readline()
+    file.close()
+    return int(api_count)
 
 def isLeapYear(year):
     tempYear = year - 2000
@@ -71,7 +76,7 @@ def createNewWeather(response, month, year, city, state):
     return Weather(date, city, state, avgHigh, avgLow, avgUV, totalSun, avgSun, totalSnow, avgSnow)
 
 def main():
-    global API_REQ_COUNT
+    API_REQ_COUNT = get_api_count() # CHANGE THIS VALUE TO YOUR OWN API_COUNT. YOU CAN FIND THIS BY GOING TO YOUR ACCOUNT CLICKING ON YOUR API KEY. IT WILL SHOW YOU YOUR API USAGE.
     month = 7
     year = 2008
     city = "CITY_NAME"
@@ -105,8 +110,13 @@ def main():
         file = open("weather-data.csv", "a")
         file.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(w.city, w.state, w.date, w.avgHigh, w.avgLow, w.uvIndex, w.totalSunHours, w.avgSunHours, w.totalSnow, w.avgSnow))
         file.close()
-        time.sleep(.5)
         API_REQ_COUNT += 1
 
+        file = open("api_count.txt", "w+")
+        file.write(str(API_REQ_COUNT))
+        file.close()
+
+        time.sleep(.25)
+    
 if __name__ == '__main__':
     main()
