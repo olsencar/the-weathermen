@@ -5,7 +5,7 @@ import time
 
 API_KEY = config.api_key
 API_ENDPOINT = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
-API_REQ_COUNT = 0
+API_REQ_COUNT = 0 # CHANGE THIS VALUE TO YOUR OWN API_COUNT. YOU CAN FIND THIS BY GOING TO YOUR ACCOUNT CLICKING ON YOUR API KEY. IT WILL SHOW YOU YOUR API USAGE.
 DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 class Weather:
     def __init__(self, date, city, state, avgHigh, avgLow, uvIndex, totalSunHours, avgSunHours, totalSnow, avgSnow):
@@ -92,7 +92,7 @@ def main():
             "format": "json"
         }
         response = requests.get(API_ENDPOINT, params=parameters)
-        
+
         if (response.status_code != 200):
             print("Bad response from API")
             continue
