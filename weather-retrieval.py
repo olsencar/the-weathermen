@@ -1,18 +1,112 @@
-API_KEY = "7826c9f4779b4375b89185008181207"
-API_ENDPOINT = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
-
 import requests # Make sure to do pip install requests
 import json
-from pprint import pprint # make sure to do pip install pprint
+import config # Make your own config.py file to place you api key into
+import time
 
-parameters = {
-    "q": "Corvallis",
-    "key": API_KEY,
-    "date": "2009/06/1",
-    "format": "json"
-}
-r = json.loads(requests.get(API_ENDPOINT, params=parameters).content)
-# result = json.loads(r.content)
+API_KEY = config.api_key
+API_ENDPOINT = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
+API_REQ_COUNT = 0
+DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+class Weather:
+    def __init__(self, date, city, state, avgHigh, avgLow, uvIndex, totalSunHours, avgSunHours, totalSnow, avgSnow):
+        self.date = date
+        self.city = city
+        self.state = state
+        self.avgHigh = avgHigh
+        self.avgLow = avgLow
+        self.uvIndex = uvIndex
+        self.totalSunHours = totalSunHours
+        self.avgSunHours = avgSunHours
+        self.totalSnow = totalSnow
+        self.avgSnow = avgSnow
 
 
-pprint(r['data']['weather'])
+def isLeapYear(year):
+    tempYear = year - 2000
+    if (tempYear % 4 == 0):
+        return True
+
+    return False
+
+def getEndDate(month, year):
+    if (month == 2 and isLeapYear(year)):
+        endDate = "{}/{}/29".format(year, month)
+    else:
+        endDate = "{}/{}/{}".format(year, month, DAYS[month - 1])
+
+    return endDate
+
+def createNewWeather(response, month, year, city, state):
+    avgHigh = 0
+    avgLow = 0
+    avgSun = 0
+    avgUV = 0
+    avgSnow = 0
+    
+    totalHigh = 0
+    totalLow = 0
+    totalUV = 0
+    totalSun = 0
+    totalSnow = 0
+    numOfDays = 0
+
+    for i in response['data']['weather']:
+        totalHigh += int(i['maxtempF'])
+        totalLow += int(i['mintempF'])
+        totalUV += int(i['uvIndex'])
+        totalSun += float(i['sunHour'])
+        totalSnow += float(i['totalSnow_cm'])
+        numOfDays += 1
+
+    avgHigh = round(totalHigh / numOfDays, 2)
+    avgLow = round(totalLow / numOfDays, 2)
+    avgSnow = round(totalSnow / numOfDays, 2)
+    avgSun = round(totalSun / numOfDays, 2)
+    avgUV = round(totalUV / numOfDays, 2)
+    totalSun = round(totalSun, 2)
+    totalSnow = round(totalSnow, 2)
+
+    date = "{}/{}".format(year, month)
+
+    return Weather(date, city, state, avgHigh, avgLow, avgUV, totalSun, avgSun, totalSnow, avgSnow)
+
+def main():
+    global API_REQ_COUNT
+    month = 7
+    year = 2008
+    city = "CITY_NAME"
+    state = "STATE_ABBREVIATION"
+    
+    while (API_REQ_COUNT < 500 and "{}/{}".format(year, month) != "2018/6"):
+        month += 1
+
+        if (month == 13):
+            month = 1
+            year += 1
+
+        parameters = {
+            "q": "{}, {}".format(city, state),
+            "key": API_KEY,
+            "date": "{}/{}/01".format(year, month),
+            "enddate": getEndDate(month, year),
+            "format": "json"
+        }
+        response = requests.get(API_ENDPOINT, params=parameters)
+        
+        if (response.status_code != 200):
+            print("Bad response from API")
+            continue
+        else:
+            print("Successful response from API on date: {}/{}".format(year, month), flush=True)
+
+        data = json.loads(response.content)
+        w = createNewWeather(data, month, year, city, state)
+
+        file = open("weather-data.csv", "a")
+        file.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(w.city, w.state, w.date, w.avgHigh, w.avgLow, w.uvIndex, w.totalSunHours, w.avgSunHours, w.totalSnow, w.avgSnow))
+        file.close()
+        time.sleep(.5)
+        API_REQ_COUNT += 1
+
+if __name__ == '__main__':
+    main()
