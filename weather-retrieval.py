@@ -2,6 +2,7 @@ import requests # Make sure to do pip install requests
 import json
 import config # Make your own config.py file to place you api key into
 import time
+import csv
 
 API_KEY = config.api_key
 API_ENDPOINT = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
@@ -75,48 +76,69 @@ def createNewWeather(response, month, year, city, state):
 
     return Weather(date, city, state, avgHigh, avgLow, avgUV, totalSun, avgSun, totalSnow, avgSnow)
 
+def getCitiesAndStates(CITIES, STATES, indexStart, indexEnd):
+    if (indexStart == 0):
+        indexStart = 1
+
+    with open('locations.csv', 'r', encoding="utf8") as f:
+        reader = csv.reader(f)
+        i = 0
+        for row in reader:
+            if (i >= indexStart and i < indexEnd):
+                CITIES.append(row[1])
+                STATES.append(row[2])
+            i += 1
+
 def main():
-    API_REQ_COUNT = get_api_count() # CHANGE THIS VALUE TO YOUR OWN API_COUNT. YOU CAN FIND THIS BY GOING TO YOUR ACCOUNT CLICKING ON YOUR API KEY. IT WILL SHOW YOU YOUR API USAGE.
-    month = 7
-    year = 2008
-    city = "CITY_NAME"
-    state = "STATE_ABBREVIATION"
-    
-    while (API_REQ_COUNT < 500 and "{}/{}".format(year, month) != "2018/6"):
-        month += 1
+    CITIES = []
+    STATES = []
 
-        if (month == 13):
-            month = 1
-            year += 1
+    print("\nMake sure to ender index as if you were accessing data in an array by it's index. arr[0] is 1st element.")
+    indexStart = int(input("Starting city index (0, 100, 200): "))
 
-        parameters = {
-            "q": "{}, {}".format(city, state),
-            "key": API_KEY,
-            "date": "{}/{}/01".format(year, month),
-            "enddate": getEndDate(month, year),
-            "format": "json"
-        }
-        response = requests.get(API_ENDPOINT, params=parameters)
+    print("\nWe are limited to retrieving a years worth of data for 39 cities every day.")
+    print("If your start index is 0, make your end index 39")
+    indexEnd = int(input("Ending city index: "))
 
-        if (response.status_code != 200):
-            print("Bad response from API")
-            continue
-        else:
-            print("Successful response from API on date: {}/{}".format(year, month), flush=True)
+    getCitiesAndStates(CITIES, STATES, indexStart, indexEnd)
 
-        data = json.loads(response.content)
-        w = createNewWeather(data, month, year, city, state)
+    cityCount = 0
+    while (cityCount < 39):
+        month = 6
+        year = 2017
+        city = CITIES[cityCount]
+        state = STATES[cityCount]
+        while ("{}/{}".format(year, month) != "2018/7"):
+            if (month == 13):
+                month = 1
+                year += 1
 
-        file = open("weather-data.csv", "a")
-        file.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(w.city, w.state, w.date, w.avgHigh, w.avgLow, w.uvIndex, w.totalSunHours, w.avgSunHours, w.totalSnow, w.avgSnow))
-        file.close()
-        API_REQ_COUNT += 1
+            parameters = {
+                "q": "{}, {}".format(city, state),
+                "key": API_KEY,
+                "date": "{}/{}/01".format(year, month),
+                "enddate": getEndDate(month, year),
+                "format": "json"
+            }
+            response = requests.get(API_ENDPOINT, params=parameters)
 
-        file = open("api_count.txt", "w+")
-        file.write(str(API_REQ_COUNT))
-        file.close()
+            if (response.status_code != 200):
+                print("Bad response from API")
+                continue
+            else:
+                print("Successful response from API on date: {}/{} | index: {} | {}, {}".format(year, month, indexStart, city, state), flush=True)
 
-        time.sleep(.25)
+            data = json.loads(response.content)
+            w = createNewWeather(data, month, year, city, state)
+
+            file = open("weather-data.csv", "a")
+            file.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(indexStart, w.city, w.state, w.date, w.avgHigh, w.avgLow, w.uvIndex, w.totalSunHours, w.avgSunHours, w.totalSnow, w.avgSnow))
+            file.close()
+        
+            month += 1
+            time.sleep(2)
+        indexStart += 1
+        cityCount += 1
     
 if __name__ == '__main__':
     main()
