@@ -123,8 +123,8 @@ def main():
             response = requests.get(API_ENDPOINT, params=parameters)
 
             if (response.status_code != 200):
-                print("Bad response from API")
-                continue
+                print("Bad response from API. You have most likely reached your limit for the day.")
+                return
             else:
                 print("Successful response from API on date: {}/{} | index: {} | {}, {}".format(year, month, indexStart, city, state), flush=True)
 
