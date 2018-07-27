@@ -84,7 +84,7 @@ def getCitiesAndStates(CITIES, STATES, indexStart, indexEnd):
         reader = csv.reader(f)
         i = 0
         for row in reader:
-            if (i >= indexStart and i < indexEnd):
+            if (i >= indexStart and i <= indexEnd):
                 CITIES.append(row[1])
                 STATES.append(row[2])
             i += 1
@@ -93,7 +93,7 @@ def main():
     CITIES = []
     STATES = []
 
-    print("\nMake sure to ender index as if you were accessing data in an array by it's index. arr[0] is 1st element.")
+    print("\nMake sure to enter index as if you were accessing data in an array by it's index. arr[0] is 1st element.")
     indexStart = int(input("Starting city index (0, 100, 200): "))
 
     print("\nWe are limited to retrieving a years worth of data for 39 cities every day.")
@@ -103,7 +103,7 @@ def main():
     getCitiesAndStates(CITIES, STATES, indexStart, indexEnd)
 
     cityCount = 0
-    while (cityCount < 39):
+    while (cityCount < (indexEnd - indexStart)):
         month = 6
         year = 2017
         city = CITIES[cityCount]
