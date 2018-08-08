@@ -24,9 +24,10 @@ def sql_init():
 
     print("Generating tables...")
     mycursor.execute("""CREATE TABLE IF NOT EXISTS locations (
-        loc_index INT PRIMARY KEY,
-        city VARCHAR(255),
-        state VARCHAR(255),
+        id INT NOT NULL AUTO_INCREMENT,
+        loc_index INT NOT NULL,
+        City VARCHAR(255),
+        State VARCHAR(255),
         loc_date VARCHAR(20),
         totalHigh INT,
         totalLow INT,
@@ -45,7 +46,8 @@ def sql_init():
         avgRainfall FLOAT,
         avgHumidity FLOAT,
         avgPressure FLOAT,
-        avgWindSpeed FLOAT
+        avgWindSpeed FLOAT,
+        PRIMARY KEY (id)
         )"""
     )
     print("\ttable(locations) created.")

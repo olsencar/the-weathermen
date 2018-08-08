@@ -1,0 +1,6 @@
+# Don't track content of these folders
+weather-data-carter.csv
+weather-data-new.csv
+weather-data.csv
+
+config.py
