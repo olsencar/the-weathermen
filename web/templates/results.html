@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<title>Results</title>
+	</head>
+
+	<body>
+
+		<h2>
+			<div id='redText'>You</div> <div class='blueText'>searched</div> for: {{query}}
+		</h2>
+
+		<form method="post" action="{{ url_for('home') }}">
+			<input type="submit" value="Return" />
+		</form>	
+	</body>	
+</html>
