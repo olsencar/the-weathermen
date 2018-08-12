@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<title>The Weathermen | {{city[0].city}}</title>
+	</head>
+
+	<body>
+		<div class="container">
+			<h2>{{city[0].city}}, {{city[0].state}}</h2>
+		
+			<table class="table table-bordered table-hover">
+				
+				<th>Date</th>
+				<th>Avg High (&deg;F)</th>
+				<th>Avg Low (&deg;F)</th>
+				<!-- <th>UV Index</th>
+				<th>Total Sun (hours)</th>
+				<th>Avg Sun (hours)</th> -->
+				<th>Total Snow (inches)</th>
+				<th>Avg Snow per day (inches)</th>
+				<th>Total Rainfall (inches)</th>
+				<th>Avg Rainfall (inches)</th>
+				<th>Avg Humidity (%)</th>
+				<th>Avg Pressure (mb)</th>
+				<th>Avg Windspeed (mph)</th>
+				
+				{% for date in city %}
+					<tr>
+						<td>{{date.date}}</td>
+						<td>{{date.avgHigh}}&deg;F</td>
+						<td>{{date.avgLow}}&deg;F</td>
+						<!-- <td>{{date.uvIndex}}</td>
+						<td>{{date.totalSunHours}}</td>
+						<td>{{date.avgSunHours}}</td> -->
+						<td>{{date.totalSnow}}</td>
+						<td>{{date.avgSnow}}</td>
+						<td>{{date.totalRainfall}}</td>
+						<td>{{date.avgRainfall}}</td>
+						<td>{{date.avgHumidity}}%</td>
+						<td>{{date.avgPressure}}</td>
+						<td>{{date.avgWindSpeed}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+		<form method="get" action="{{ url_for('home') }}">
+			<input type="submit" value="Return" />
+		</form>	
+	</body>	
+</html>

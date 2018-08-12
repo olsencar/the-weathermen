@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<title>Results</title>
+	</head>
+
+	<body>
+		<h1>Results from query: {{query}}</h1>
+		<div class="container">
+			{% for item in results %}
+				<div class="result">
+					<a href="#{{item}}">{{item.city}}, {{item.state}}</a>
+				</div>
+			{% endfor %}
+		</div>
+		<form method="post" action="{{ url_for('home') }}">
+			<input type="submit" value="Return" />
+		</form>	
+	</body>	
+</html>
