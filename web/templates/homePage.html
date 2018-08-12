@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <title>The Weathermen</title>
+    </head>
+    <body>
+        <header>
+            <h1>The Weathermen</h1>
+        </header>
+        <form method="get" action="{{ url_for("results") }}" class="input-group">
+            <input type="text" placeholder="City, State" class="form-control" name="searchterm">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-secondary">Submit</button>
+            </span>
+        </form>
+    </body>
+    
+</html>
