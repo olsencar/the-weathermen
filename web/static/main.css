@@ -4,6 +4,10 @@
     margin: 10px;
 }
 
+#filter-btn {
+    background-color: #e6e6e6;
+}
+
 #filter {
     margin-top: 3px;
     background: #e4e4e4;

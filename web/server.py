@@ -38,7 +38,7 @@ def results():
     else:
         data = request.args
     
-    results = ["ABCDE", "TEST", "NEVER", "END"]
+    results = ["Portland", "Corvallis", "New York", "Chicago"]
     query = data.get('searchterm').title()
     beginDate = data.get('beginDate')
     endDate = data.get('endDate')
