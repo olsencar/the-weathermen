@@ -7,11 +7,14 @@
 	</head>
 
 	<body>
-
-		<h2>
-			<div id='redText'>You</div> <div class='blueText'>searched</div> for: {{query}}
-		</h2>
-
+		<h1>Results from query: {{query}}</h1>
+		<div class="container">
+			{% for item in results %}
+				<div class="result">
+					<a href="#{{item}}">{{item}}, {{item}}</a>
+				</div>
+			{% endfor %}
+		</div>
 		<form method="post" action="{{ url_for('home') }}">
 			<input type="submit" value="Return" />
 		</form>	

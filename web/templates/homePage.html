@@ -1,25 +1,57 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html> -->
 <html>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{url_for("static", filename="main.css")}}">
+    <!-- Required for bootstrap 3 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <title>The Weathermen</title>
 </head>
 
 <body>
     <header>
-        <h1>The Weathermen</h1>
+        <h1 class="text-center">The Weathermen</h1>
     </header>
-    <div class="container">
-        <form method="get" action="{{ url_for("results") }}" class="input-group">
-            <input type="text" placeholder="City, State" class="form-control" name="searchterm">
-            <span class="input-group-btn">
-                <button type="submit" class="btn btn-secondary">Submit</button>
-            </span>
-        </form>
-    </div>
+
+    <form method="get" action="{{ url_for("results") }}" class="input-group center-block">
+        <div class="container">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <a href="#filter-container" id="filter-btn" class="btn btn-default" data-toggle="collapse">Filter</a>
+                </span>
+                <input type="text" placeholder="Enter the desired city" id="searchbar" class="form-control" name="searchterm">
+                <span class="input-group-btn">
+                    <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+                </span>
+            </div>           
+            
+        </div>
+        <div id="filter-container" class="container collapse">
+            <div id="filter">
+                <div id="dates" class="input-group">
+                    <label for="begin-date">Begin Date:</label>
+                    <input type="month" id="begin-date" class="form-option" name="beginDate">
+                    
+                    <label for="end-date">End Date:</label>
+                    <input type="month" id="end-date" class="form-option" name="endDate"> 
+                </div>
+                <div id="temps" class="input-group">
+                    <label for="min-temp">Minimum Temp (F)</label>
+                    <input type="number" id="min-temp" class="form-option" min=-80 max=140 name="minTemp">
+            
+                    <label for="max-temp">Maximum Temp (F)</label>
+                    <input type="number" id="max-temp" class="form-option" min=-80 max=140 name="maxTemp">                
+                </div> 
+            </div>
+        </div>
+    </form>
+
+
 </body>
 
 </html>
