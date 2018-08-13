@@ -49,6 +49,8 @@ def results():
     minTemp = int(data.get('minTemp'))
     maxTemp = int(data.get('maxTemp'))
     # SHANE ENTER YOUR WHOOSH INDEX HERE
+    # FOR the begin dates and end dates, first check if = '', then use strftime(date, "%Y-%m")
+
     
     print("You searched for: " + query)
     return render_template('results.html', query=query)
