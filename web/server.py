@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, request, send_from_directory
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -31,22 +32,26 @@ def send_file(path):
     print("in here {}".format(path))
     return send_from_directory('text/css', path)
 
-@app.route('/results/', methods=['GET', 'POST'])
+@app.route('/results/', methods=['GET'])
 def results():
-    if (request.method == 'POST'):
-        data = request.form
-    else:
-        data = request.args
+    data = request.args
+    query = data.get('searchterm')
     
-    results = ["Portland", "Corvallis", "New York", "Chicago"]
-    query = data.get('searchterm').title()
     beginDate = data.get('beginDate')
     endDate = data.get('endDate')
-    minTemp = data.get('minTemp')
-    maxTemp = data.get('maxTemp')
 
+    if (beginDate != ''):
+        beginDate = datetime.strptime(beginDate, "%Y-%m")
+    
+    if (endDate != ''):
+        endDate = datetime.strptime(endDate, "%Y-%m")
+
+    minTemp = int(data.get('minTemp'))
+    maxTemp = int(data.get('maxTemp'))
+    # SHANE ENTER YOUR WHOOSH INDEX HERE
+    
     print("You searched for: " + query)
-    return render_template('results.html', query=query, results=results)
+    return render_template('results.html', query=query)
 
 @app.route('/city/', methods=['GET', 'POST'])
 def city():
