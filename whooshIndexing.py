@@ -11,7 +11,7 @@ from whoosh.query import *
 from whoosh.searching import *
 def search(indexer, searchTerm):
 	with indexer.searcher() as searcher:
-		queryTest = MultifieldParser(["City", "Index", "State", "Date"], schema=indexer.schema).parse(searchTerm)
+		queryTest = MultifieldParser(["City", "avg", "State", "Date"], schema=indexer.schema).parse(searchTerm)
 		#nr = NumericRange("Index", 1, 200);
 		#np = query.Term("Index", 151);
 		results = searcher.search(queryTest, limit=None)
@@ -28,7 +28,7 @@ def search(indexer, searchTerm):
 			'''
 			
 def index():
-	schema = Schema(City=TEXT(stored=True), Index=NUMERIC(stored=True), State=TEXT(stored=True), Date=DATETIME(stored=True), avgHigh=NUMERIC(float, stored=False), avgLow=NUMERIC(float, stored=False), avgUV=NUMERIC(float, stored=False), totalSun=NUMERIC(float, stored=False), avgSun=NUMERIC(float, stored=False), totalSnow=NUMERIC(float, stored=False), avgSnow=NUMERIC(float, stored=False), totalRainfall=NUMERIC(float, stored=False), avgRainfall=NUMERIC(float, stored=False), avgHumidity=NUMERIC(float, stored=False), pressure=NUMERIC(float, stored=False), windSpeed=NUMERIC(float, stored=False));
+	schema = Schema(City=TEXT(stored=True), Index=NUMERIC(stored=True), State=TEXT(stored=True), Date=DATETIME(stored=True), avgHigh=NUMERIC(float, stored=True), avgLow=NUMERIC(float, stored=True), avgUV=NUMERIC(float, stored=True), totalSun=NUMERIC(float, stored=True), avgSun=NUMERIC(float, stored=True), totalSnow=NUMERIC(float, stored=True), avgSnow=NUMERIC(float, stored=True), totalRainfall=NUMERIC(float, stored=True), avgRainfall=NUMERIC(float, stored=True), avgHumidity=NUMERIC(float, stored=True), pressure=NUMERIC(float, stored=True), windSpeed=NUMERIC(float, stored=Stored)), avgTemp=NUMERIC(float, stored=True);
 	indexer = create_in("indexedData", schema)
 	
 	writer = indexer.writer()
@@ -43,7 +43,7 @@ def index():
 		i+=1;
 		row[3] = datetime.datetime.strptime(row[3], "%Y-%m")
 		print(row[3]);
-		writer.add_document(City=row[1], Index=row[0], State=row[2], Date=row[3], avgHigh=float(row[4]), avgLow=float(row[5]), avgUV=row[6], totalSun=row[7], avgSun=row[8], totalSnow=row[9], avgSnow=row[10], totalRainfall=row[11], avgRainfall=row[12], avgHumidity=row[13], pressure=row[14], windSpeed=row[15])
+		writer.add_document(City=row[1], Index=row[0], State=row[2], Date=row[3], avgHigh=float(row[4]), avgLow=float(row[5]), avgUV=(float(row[6]), totalSun=row[7], avgSun=row[8], totalSnow=row[9], avgSnow=row[10], totalRainfall=row[11], avgRainfall=row[12], avgHumidity=row[13], pressure=row[14], windSpeed=row[15], avgTemp=row[16])
 		
 	writer.commit();
 	
