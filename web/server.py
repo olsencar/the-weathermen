@@ -48,8 +48,8 @@ def send_file(path):
 def results():
     data = request.args
     print(data)
-    query = data.get('searchterm')
-
+    query = data.get('searchterm').title()
+    
     beginDate = data.get('beginDate')
     endDate = data.get('endDate')
     minTemp = data.get('minTemp')
