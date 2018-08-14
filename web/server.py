@@ -44,12 +44,12 @@ def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
     searchTerm += " [{} to ".format(beginDate)
    
     if (endDate == ''):
-        endDate = "2018-6" 
+        endDate = "2018-6"
     searchTerm += "{}] ".format(endDate)
 
     if (minTemp == ''):
         minTemp = "-80"
-    
+
     if (maxTemp == ''):
         maxTemp = "140"
 
