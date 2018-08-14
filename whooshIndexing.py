@@ -11,7 +11,7 @@ from whoosh.query import *
 from whoosh.searching import *
 def search(indexer, searchTerm):
 	with indexer.searcher() as searcher:
-		queryTest = MultifieldParser(["City", "avg", "State", "Date"], schema=indexer.schema).parse(searchTerm)
+		queryTest = MultifieldParser(["City", "avgTemp", "avgLow", "avgHigh", "State", "Date"], schema=indexer.schema).parse(searchTerm)
 		#nr = NumericRange("Index", 1, 200);
 		#np = query.Term("Index", 151);
 		results = searcher.search(queryTest, limit=None)
