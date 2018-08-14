@@ -37,7 +37,7 @@ def results():
         data = request.form
     else:
         data = request.args
-    
+
     results = ["Portland", "Corvallis", "New York", "Chicago"]
     query = data.get('searchterm').title()
     beginDate = data.get('beginDate')
