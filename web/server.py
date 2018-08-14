@@ -59,8 +59,11 @@ def results():
 
     searchTerm = query
     splitSearch = searchTerm.split(',')
+   
 
-    if (len(splitSearch) > 0):
+    if (len(splitSearch) > 1):
+        splitSearch[0].strip()
+        splitSearch[1].strip()
         searchTerm = "{} AND {}".format(splitSearch[0], splitSearch[1])
     if (beginDate == ''):
         beginDate = "2017-6"
@@ -89,6 +92,7 @@ def results():
             print(line)
 
     print("You searched for: " + query)
+    
     return render_template('results.html', query=query)
 
 
