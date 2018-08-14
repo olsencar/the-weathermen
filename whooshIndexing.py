@@ -11,7 +11,7 @@ from whoosh.query import *
 from whoosh.searching import *
 def search(indexer, searchTerm):
 	with indexer.searcher() as searcher:
-		queryTest = MultifieldParser(["City", "Index", "State", "Date"], schema=indexer.schema).parse(searchTerm)
+		queryTest = MultifieldParser(["City", "Index", "State", "Date", "avgHigh", "avgLow"], schema=indexer.schema).parse(searchTerm)
 		#nr = NumericRange("Index", 1, 200);
 		#np = query.Term("Index", 151);
 		results = searcher.search(queryTest, limit=None)
@@ -28,7 +28,7 @@ def search(indexer, searchTerm):
 			'''
 			
 def index():
-	schema = Schema(City=TEXT(stored=True), Index=NUMERIC(stored=True), State=TEXT(stored=True), Date=DATETIME(stored=True), avgHigh=NUMERIC(float, stored=False), avgLow=NUMERIC(float, stored=False), avgUV=NUMERIC(float, stored=False), totalSun=NUMERIC(float, stored=False), avgSun=NUMERIC(float, stored=False), totalSnow=NUMERIC(float, stored=False), avgSnow=NUMERIC(float, stored=False), totalRainfall=NUMERIC(float, stored=False), avgRainfall=NUMERIC(float, stored=False), avgHumidity=NUMERIC(float, stored=False), pressure=NUMERIC(float, stored=False), windSpeed=NUMERIC(float, stored=False));
+	schema = Schema(City=TEXT(stored=True), Index=NUMERIC(stored=True), State=TEXT(stored=True), Date=DATETIME(stored=True), avgHigh=NUMERIC(float, stored=True), avgLow=NUMERIC(float, stored=True), avgUV=NUMERIC(float, stored=False), totalSun=NUMERIC(float, stored=False), avgSun=NUMERIC(float, stored=False), totalSnow=NUMERIC(float, stored=False), avgSnow=NUMERIC(float, stored=False), totalRainfall=NUMERIC(float, stored=False), avgRainfall=NUMERIC(float, stored=False), avgHumidity=NUMERIC(float, stored=False), pressure=NUMERIC(float, stored=False), windSpeed=NUMERIC(float, stored=False));
 	indexer = create_in("indexedData", schema)
 	
 	writer = indexer.writer()
