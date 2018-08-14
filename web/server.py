@@ -72,43 +72,37 @@ def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
         for key in Cities:
             print("City: " + key + " State: " + Cities[key]);
 
-        print("Length of results: " + str(len(results)))
-    return results, Cities, arr
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    print("At home page")
-    return render_template("homePage.html")
+    fp = open("../locations.csv", "r");
+    head = next(fp);
+    Lat = [];
+    Long = [];
+    for line in fp:
+        row  = line.split(",");
+        for i in Cities:
+            if (i == row[1]):
+                latStr = row[3][0] + row[3][1] + ".";
+                dec = float(row[3][4] + row[3][5])/60 + float(row[3][7] + row[3][8])/3600;
+                latStr = latStr + str(dec);
+                latStr = latStr[0:2] + latStr[4:]
+                Lat.append(latStr);
+                if ((row[4][2]) >= '0' and (row[4][2]) <= '9'):
+                    longStr = row[4][0] + row[4][1] + row[4][2] + ".";
+                    dec = float(row[4][5] + row[4][6])/60 + float(row[4][8] + row[4][9])/3600;
+                    longStr = longStr + str(dec);
+                    longStr = longStr[0:2] + longStr[4:]
+                    Long.append(longStr);
+                else:
+                    longStr = row[4][0] + row[4][1] + ".";
+                    dec = float(row[4][4] + row[4][5])/60 + float(row[4][7] + row[4][8])/3600;
+                    longStr = longStr + str(dec);
+                    longStr = longStr[0:2] + longStr[4:]
+                    Long.append(longStr);
 
-# For static files that HTML requests. Like the CSS file.
-
-
-@app.route('/static/<path:path>')
-def send_file(path):
-    print("in here {}".format(path))
-    return send_from_directory('text/css', path)
-
-
-@app.route('/results/', methods=['GET'])
-def results():
-    data = request.args
-    print(data)
-    query = data.get('searchterm').title()
-    
-    beginDate = data.get('beginDate')
-    endDate = data.get('endDate')
-    minTemp = data.get('minTemp')
-    maxTemp = data.get('maxTemp')
-    # SHANE ENTER YOUR WHOOSH INDEX HERE
-    # FOR the begin dates and end dates, first check if = '', then use strftime(date, "%Y-%m")
-
-    searchTerm = query
-    Cities = {}
-    arr = []
-    results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
-    
     print("You searched for: " + query)
     if (len(Cities) > 1):
-        return render_template('results.html', query=query, results=Cities, searchterm=searchTerm, beginDate=beginDate, endDate=endDate, minTemp=minTemp, maxTemp=maxTemp)    
+        return render_template('results.html', query=query, results=Cities, searchterm=searchTerm) 
+    else:
+        return render_template('error.html')  
     
     return render_template('city.html', results=arr)
 
