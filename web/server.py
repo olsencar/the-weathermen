@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, request, send_from_directory
 from datetime import datetime
 import whoosh
 import whoosh.index as indexUSE
+from whoosh import analysis
 indexer = indexUSE.open_dir("../indexedData")
 from whoosh.qparser import QueryParser
 from whoosh.qparser import MultifieldParser
@@ -9,7 +10,6 @@ from whoosh.query import *
 from whoosh.searching import *
 
 app = Flask(__name__)
-
 
 class City:
     def __init__(self, city, state, date, avgHigh, avgLow, uvIndex, totalSunHours, avgSunHours, totalSnow, avgSnow, totalRainfall, avgRainfall, avgHumidity, avgPressure, avgWindSpeed):
@@ -73,15 +73,16 @@ def results():
     if (maxTemp == ''):
         maxTemp = "140"
     rng = NumericRange("avgTemp", minTemp, maxTemp)
-    
+
     searchTerm += "{}] ".format(maxTemp)
     print(minTemp)
     print("searchterm: {}".format(searchTerm))
     with indexer.searcher() as searcher:
         queryTest = MultifieldParser(["City", "avgTemp", "avgLow", "avgHigh", "State", "Date"], schema=indexer.schema).parse(searchTerm)
         #nr = NumericRange("Index", 1, 200);
-        #np = query.Term("Index", 151);
-        results = searcher.search(queryTest, limit=None)
+        np = query.Term("Index", 151);
+        
+        results = searcher.search(queryTest, filter=rng limit=None)
         print("Length of results: " + str(len(results)))
         Cities = {}
         for line in results:
