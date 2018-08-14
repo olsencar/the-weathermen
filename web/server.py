@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, request, send_from_directory
 from datetime import datetime
 import whoosh
 import whoosh.index as indexUSE
-from whoosh import analysis
+from whoosh.analysis import *
 indexer = indexUSE.open_dir("../indexedData")
 from whoosh.qparser import QueryParser
 from whoosh.qparser import MultifieldParser
@@ -58,10 +58,13 @@ def results():
     # FOR the begin dates and end dates, first check if = '', then use strftime(date, "%Y-%m")
 
     searchTerm = query
+    splitSearch = searchTerm.split(',')
 
+    if (len(splitSearch) > 0):
+        searchTerm = "{} AND {}".format(splitSearch[0], splitSearch[1])
     if (beginDate == ''):
         beginDate = "2017-6"
-    searchTerm += "[{} to ".format(beginDate)
+    searchTerm += " [{} to ".format(beginDate)
    
     if (endDate == ''):
         endDate = "2018-6" 
@@ -72,17 +75,14 @@ def results():
     
     if (maxTemp == ''):
         maxTemp = "140"
-    rng = NumericRange("avgTemp", minTemp, maxTemp)
 
-    searchTerm += "{}] ".format(maxTemp)
-    print(minTemp)
     print("searchterm: {}".format(searchTerm))
     with indexer.searcher() as searcher:
         queryTest = MultifieldParser(["City", "avgTemp", "avgLow", "avgHigh", "State", "Date"], schema=indexer.schema).parse(searchTerm)
-        #nr = NumericRange("Index", 1, 200);
-        np = query.Term("Index", 151);
+        nr = NumericRange("avgTemp", int(minTemp), int(maxTemp));
+        # np = query.Term("Index", 151);
         
-        results = searcher.search(queryTest, filter=rng limit=None)
+        results = searcher.search(queryTest, filter=nr, limit=None)
         print("Length of results: " + str(len(results)))
         Cities = {}
         for line in results:
