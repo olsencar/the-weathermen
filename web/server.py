@@ -60,7 +60,7 @@ def results():
     searchTerm = query
     splitSearch = searchTerm.split(',')
 
-    if (len(splitSearch) > 0):
+    if (len(splitSearch) > 1):
         searchTerm = "{} AND {}".format(splitSearch[0], splitSearch[1])
     if (beginDate == ''):
         beginDate = "2017-6"
@@ -86,7 +86,13 @@ def results():
         print("Length of results: " + str(len(results)))
         Cities = {}
         for line in results:
-            print(line)
+            if line['City'] in Cities:
+                pass;
+            else:
+                Cities[line['City']] = line['State'];
+        
+        for key in Cities:
+            print("City: " + key + " State: " + Cities[key]);
 
     print("You searched for: " + query)
     return render_template('results.html', query=query)
