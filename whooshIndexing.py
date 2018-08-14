@@ -43,7 +43,7 @@ def index():
 		i+=1;
 		row[3] = datetime.datetime.strptime(row[3], "%Y-%m")
 		print(row[3]);
-		writer.add_document(City=row[1], Index=row[0], State=row[2], Date=row[3], avgHigh=float(row[4]), avgLow=float(row[5]), avgUV=row[6], totalSun=row[7], avgSun=row[8], totalSnow=row[9], avgSnow=row[10], totalRainfall=row[11], avgRainfall=row[12], avgHumidity=row[13], pressure=row[14], windSpeed=row[15], avgTemp=row[16])
+		writer.add_document(City=row[1], Index=row[0], State=row[2], Date=row[3], avgHigh=row[4], avgLow=row[5], avgUV=row[6], totalSun=row[7], avgSun=row[8], totalSnow=row[9], avgSnow=row[10], totalRainfall=row[11], avgRainfall=row[12], avgHumidity=row[13], pressure=row[14], windSpeed=row[15], avgTemp=row[16])
 		
 	writer.commit();
 	
