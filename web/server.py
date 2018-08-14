@@ -124,13 +124,12 @@ def results():
                     longStr = longStr + str(dec);
                     longStr = longStr[0:2] + longStr[4:]
                     Long.append(longStr);
-    print(Lat);
-    print(Long);
-
 
     print("You searched for: " + query)
     if (len(Cities) > 1):
-        return render_template('results.html', query=query, results=Cities, searchterm=searchTerm)    
+        return render_template('results.html', query=query, results=Cities, searchterm=searchTerm) 
+    else:
+        return render_template('error.html')  
     
     return render_template('city.html', query=query, results=arr, searchterm=searchTerm)
 
