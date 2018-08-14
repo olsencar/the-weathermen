@@ -2,12 +2,12 @@
 	<head>
 		<meta charset="UTF-8">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<title>The Weathermen | {{city[0].city}}</title>
+		<title>The Weathermen | {{results[0].city}}</title>
 	</head>
 
 	<body>
 		<div class="container">
-			<h2>{{city}}, {{city}}</h2>
+			<h2>{{results[0].city}}, {{results[0].state}}</h2>
 		
 			<table class="table table-bordered table-hover">
 				
@@ -25,7 +25,7 @@
 				<th>Avg Pressure (mb)</th>
 				<th>Avg Windspeed (mph)</th>
 				
-				{% for date in city %}
+				{% for date in results %}
 					<tr>
 						<td>{{date.date}}</td>
 						<td>{{date.avgHigh}}&deg;F</td>

@@ -11,7 +11,7 @@
 		<div class="container">
 			{% for i in results %}
 				<div class="result">
-					<a href="{{ url_for('city') }}?searchterm={{ searchterm }}">{{i}}, {{results[i]}}</a>
+					<a href="{{ url_for('city') }}?searchterm={{searchterm}}&city={{i}}&state={{results[i]}}&beginDate={{beginDate}}&endDate={{endDate}}&minTemp={{minTemp}}&maxTemp={{maxTemp}}">{{i}}, {{results[i]}}</a>
 				</div>
 			{% endfor %}
 		</div>

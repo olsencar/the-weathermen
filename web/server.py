@@ -30,7 +30,50 @@ class City:
         self.avgWindSpeed = avgWindSpeed
         self.avgTemp = avgTemp
 
+def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
+    splitSearch = searchTerm.split(',')
+    
+    if (len(splitSearch) > 1):
+        splitSearch[0].strip()
+        splitSearch[1].strip()
+        
+        searchTerm = "'{}' AND '{}')".format(splitSearch[0], splitSearch[1])
 
+    if (beginDate == ''):
+        beginDate = "2017-6"
+    searchTerm += " [{} to ".format(beginDate)
+   
+    if (endDate == ''):
+        endDate = "2018-6" 
+    searchTerm += "{}] ".format(endDate)
+
+    if (minTemp == ''):
+        minTemp = "-80"
+    
+    if (maxTemp == ''):
+        maxTemp = "140"
+
+    print("searchterm: {}".format(searchTerm))
+    with indexer.searcher() as searcher:
+        queryTest = MultifieldParser(["City", "avgTemp", "avgLow", "avgHigh", "State", "Date"], schema=indexer.schema).parse(searchTerm)
+        nr = NumericRange("avgTemp", int(minTemp), int(maxTemp));
+
+        # np = query.Term("Index", 151);
+        
+        results = searcher.search(queryTest, filter=nr, limit=None)
+        arr = []
+        Cities = {}
+        for line in results:
+            if line['City'] in Cities:
+                pass;
+            else:
+                Cities[line['City']] = line['State'];
+            arr.append(City(line['City'], line['State'], datetime.strftime(line['Date'], "%Y-%m"), line['avgHigh'], line['avgLow'],line['avgUV'], line['totalSun'], line['avgSun'],line['totalSnow'], line['avgSnow'], line['totalRainfall'], line['avgRainfall'], line['avgHumidity'], line['pressure'], line['windSpeed'], line['avgTemp']))
+        for key in Cities:
+            print("City: " + key + " State: " + Cities[key]);
+
+        print("Length of results: " + str(len(results)))
+    return results, Cities, arr
 @app.route('/', methods=['GET', 'POST'])
 def home():
     print("At home page")
@@ -59,68 +102,43 @@ def results():
     # FOR the begin dates and end dates, first check if = '', then use strftime(date, "%Y-%m")
 
     searchTerm = query
-    splitSearch = searchTerm.split(',')
-   
-
-    if (len(splitSearch) > 1):
-        splitSearch[0].strip()
-        splitSearch[1].strip()
-        searchTerm = "{} AND {}".format(splitSearch[0], splitSearch[1])
-    if (beginDate == ''):
-        beginDate = "2017-6"
-    searchTerm += " [{} to ".format(beginDate)
-   
-    if (endDate == ''):
-        endDate = "2018-6" 
-    searchTerm += "{}] ".format(endDate)
-
-    if (minTemp == ''):
-        minTemp = "-80"
+    Cities = {}
+    arr = []
+    results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
     
-    if (maxTemp == ''):
-        maxTemp = "140"
-
-    print("searchterm: {}".format(searchTerm))
-    with indexer.searcher() as searcher:
-        queryTest = MultifieldParser(["City", "avgTemp", "avgLow", "avgHigh", "State", "Date"], schema=indexer.schema).parse(searchTerm)
-        nr = NumericRange("avgTemp", int(minTemp), int(maxTemp));
-        # np = query.Term("Index", 151);
-        
-        r = searcher.search(queryTest, filter=nr, limit=None)
-        print("Length of results: " + str(len(r)))
-        arr = []
-        Cities = {}
-        for line in r:
-            if line['City'] in Cities:
-                pass;
-            else:
-                Cities[line['City']] = line['State'];
-            arr.append(City(line['City'], line['State'], datetime.strftime(line['Date'], "%Y-%m"), line['avgHigh'], line['avgLow'],line['avgUV'], line['totalSun'], line['avgSun'],line['totalSnow'], line['avgSnow'], line['totalRainfall'], line['avgRainfall'], line['avgHumidity'], line['pressure'], line['windSpeed'], line['avgTemp']))
-        for key in Cities:
-            print("City: " + key + " State: " + Cities[key]);
-
     print("You searched for: " + query)
     if (len(Cities) > 1):
-        return render_template('results.html', query=query, results=Cities, searchterm=searchTerm)    
+        return render_template('results.html', query=query, results=Cities, searchterm=searchTerm, beginDate=beginDate, endDate=endDate, minTemp=minTemp, maxTemp=maxTemp)    
     
-    return render_template('city.html', query=query, results=arr, searchterm=searchTerm)
+    return render_template('city.html', results=arr)
 
 
 @app.route('/city', methods=['GET', 'POST'])
 def city():
     data = request.args
 
-    # cityName = data.get('city')
-    # stateName = data.get('state')
-    searchterm = data.get('searchterm')
-    # print(searchterm)
+    cityName = data.get('city')
+    stateName = data.get('state')
+    minTemp = data.get('minTemp')
+    maxTemp = data.get('maxTemp')
+    beginDate = data.get('beginDate')
+    endDate = data.get('endDate')
+
+    searchTerm = data.get('searchterm')
+    results = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
+    arr = []
+
+    for line in results:
+        arr.append(City(line['City'], line['State'], datetime.strftime(line['Date'], "%Y-%m"), line['avgHigh'], line['avgLow'],line['avgUV'], line['totalSun'], line['avgSun'],line['totalSnow'], line['avgSnow'], line['totalRainfall'], line['avgRainfall'], line['avgHumidity'], line['pressure'], line['windSpeed'], line['avgTemp']))
+   
+    print(searchTerm)
     # Get data about city from query
-    city = []
+    
     # city.append(City("New York", "New York", "2017/7", 88.48, 77.0,
     #                  0.0, 0.0, 0.0, 0.0, 0.0, 3.94, 0.13, 64.42, 1014.68, 10.26))
     # city.append(City("New York", "New York", "2017/8", 88.48, 77.0,
     #                  0.0, 0.0, 0.0, 0.0, 0.0, 3.94, 0.13, 64.42, 1014.68, 10.26))
-    return render_template('city.html', city=searchterm)
+    return render_template('city.html', results=arr)
 
 
 if (__name__ == '__main__'):
