@@ -112,7 +112,7 @@ def results():
                 latStr = latStr + str(dec);
                 latStr = latStr[0:2] + latStr[4:]
                 Lat.append(latStr);
-                if (int(row[4][2]) >= 0 and int(row[4][2]) <=9):
+                if ((row[4][2]) >= '0' and (row[4][2]) <= '9'):
                     longStr = row[4][0] + row[4][1] + row[4][2] + ".";
                     dec = float(row[4][5] + row[4][6])/60 + float(row[4][8] + row[4][9])/3600;
                     longStr = longStr + str(dec);
