@@ -34,7 +34,6 @@ def send_file(path):
 
 @app.route('/results/', methods=['GET'])
 def results():
-<<<<<<< HEAD
     if (request.method == 'POST'):
         data = request.form
     else:
@@ -42,17 +41,12 @@ def results():
 
     results = ["Portland", "Corvallis", "New York", "Chicago"]
     query = data.get('searchterm').title()
-=======
-    data = request.args
-    query = data.get('searchterm')
-    
->>>>>>> 7cd8dba53ff6d0918b8d91cd2789c2dc6f88317b
     beginDate = data.get('beginDate')
     endDate = data.get('endDate')
 
     if (beginDate != ''):
         beginDate = datetime.strptime(beginDate, "%Y-%m")
-    
+
     if (endDate != ''):
         endDate = datetime.strptime(endDate, "%Y-%m")
 
@@ -61,7 +55,7 @@ def results():
     # SHANE ENTER YOUR WHOOSH INDEX HERE
     # FOR the begin dates and end dates, first check if = '', then use strftime(date, "%Y-%m")
 
-    
+
     print("You searched for: " + query)
     return render_template('results.html', query=query)
 
