@@ -89,7 +89,13 @@ def results():
         print("Length of results: " + str(len(results)))
         Cities = {}
         for line in results:
-            print(line)
+            if line['City'] in Cities:
+                pass;
+            else:
+                Cities[line['City']] = line['State'];
+        
+        for key in Cities:
+            print("City: " + key + " State: " + Cities[key]);
 
     print("You searched for: " + query)
     
