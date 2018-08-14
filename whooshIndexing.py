@@ -79,9 +79,6 @@ def main(argv):
 		searchTerm += " "
 	print(searchTerm);
 	results = search(indexer, searchTerm)
-	
-
-
 
 if __name__ == '__main__':
 	main(sys.argv[1:])

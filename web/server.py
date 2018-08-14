@@ -73,6 +73,7 @@ def results():
     if (maxTemp == ''):
         maxTemp = "140"
     rng = NumericRange("avgTemp", minTemp, maxTemp)
+    
     searchTerm += "{}] ".format(maxTemp)
     print(minTemp)
     print("searchterm: {}".format(searchTerm))
