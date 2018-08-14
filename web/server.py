@@ -99,6 +99,35 @@ def results():
         for key in Cities:
             print("City: " + key + " State: " + Cities[key]);
 
+    fp = open("../locations.csv", "r");
+    head = next(fp);
+    Lat = [];
+    Long = [];
+    for line in fp:
+        row  = line.split(",");
+        for i in Cities:
+            if (i == row[1]):
+                latStr = row[3][0] + row[3][1] + ".";
+                dec = float(row[3][4] + row[3][5])/60 + float(row[3][7] + row[3][8])/3600;
+                latStr = latStr + str(dec);
+                latStr = latStr[0:2] + latStr[4:]
+                Lat.append(latStr);
+                if (int(row[4][2]) >= 0 and int(row[4][2]) <=9):
+                    longStr = row[4][0] + row[4][1] + row[4][2] + ".";
+                    dec = float(row[4][5] + row[4][6])/60 + float(row[4][8] + row[4][9])/3600;
+                    longStr = longStr + str(dec);
+                    longStr = longStr[0:2] + longStr[4:]
+                    Long.append(longStr);
+                else:
+                    longStr = row[4][0] + row[4][1] + ".";
+                    dec = float(row[4][4] + row[4][5])/60 + float(row[4][7] + row[4][8])/3600;
+                    longStr = longStr + str(dec);
+                    longStr = longStr[0:2] + longStr[4:]
+                    Long.append(longStr);
+    print(Lat);
+    print(Long);
+
+
     print("You searched for: " + query)
     if (len(Cities) > 1):
         return render_template('results.html', query=query, results=Cities, searchterm=searchTerm)    
