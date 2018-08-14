@@ -9,9 +9,9 @@
 	<body>
 		<h1>Results from query: {{query}}</h1>
 		<div class="container">
-			{% for item in results %}
+			{% for i in results %}
 				<div class="result">
-					<a href="#{{item}}">{{item}}, {{item}}</a>
+					<a href="{{ url_for('city') }}?searchterm={{ searchterm }}">{{i}}, {{results[i]}}</a>
 				</div>
 			{% endfor %}
 		</div>
