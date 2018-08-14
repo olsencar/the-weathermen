@@ -33,7 +33,7 @@ class City:
 @app.route('/', methods=['GET', 'POST'])
 def home():
     print("At home page")
-    return render_template("homePage.html")
+    return render_template("homePage_multi_map.html")
 
 # For static files that HTML requests. Like the CSS file.
 
@@ -49,7 +49,7 @@ def results():
     data = request.args
     print(data)
     query = data.get('searchterm').title()
-    
+
     beginDate = data.get('beginDate')
     endDate = data.get('endDate')
     minTemp = data.get('minTemp')
@@ -62,14 +62,14 @@ def results():
     if (beginDate == ''):
         beginDate = "2017-6"
     searchTerm += "[{} to ".format(beginDate)
-   
+
     if (endDate == ''):
-        endDate = "2018-6" 
+        endDate = "2018-6"
     searchTerm += "{}] ".format(endDate)
 
     if (minTemp == ''):
         minTemp = "-80"
-    
+
     if (maxTemp == ''):
         maxTemp = "140"
     rng = NumericRange("avgTemp", minTemp, maxTemp)
