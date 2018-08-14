@@ -6,8 +6,20 @@
 	</head>
 
 	<body>
+		<h2 class="text-center">{{results[0].city}}, {{results[0].state}}</h2>
+		<div class="container" style="padding-top:25px;padding-bottom:10px">
+			<center>
+				<iframe
+				width="400"
+				height="300"
+				frameborder="0" style="border:0"
+				src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDUFWCJQ7VquNihgeFJsPBbOkpwYIUxZa0
+					&q=United+States" allowfullscreen>
+				</iframe>
+			</center>
+		</div>
 		<div class="container">
-			<h2>{{results[0].city}}, {{results[0].state}}</h2>
+			
 		
 			<table class="table table-bordered table-hover">
 				
