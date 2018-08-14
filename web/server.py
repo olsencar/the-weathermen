@@ -71,11 +71,27 @@ def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
             arr.append(City(line['City'], line['State'], datetime.strftime(line['Date'], "%Y-%m"), line['avgHigh'], line['avgLow'],line['avgUV'], line['totalSun'], line['avgSun'],line['totalSnow'], line['avgSnow'], line['totalRainfall'], line['avgRainfall'], line['avgHumidity'], line['pressure'], line['windSpeed'], line['avgTemp']))
         for key in Cities:
             print("City: " + key + " State: " + Cities[key]);
+    return results, Cities, arr
 
+@app.route('/results', methods=['GET', 'POST'])
+def results():
+    data = request.args
+    query = data.get('searchterm')
+    cityName = data.get('city')
+    stateName = data.get('state')
+    minTemp = data.get('minTemp')
+    maxTemp = data.get('maxTemp')
+    beginDate = data.get('beginDate')
+    endDate = data.get('endDate')
+
+    searchTerm = query
+
+    results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
     fp = open("../locations.csv", "r");
     head = next(fp);
     Lat = [];
     Long = [];
+   
     for line in fp:
         row  = line.split(",");
         for i in Cities:
@@ -97,14 +113,14 @@ def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
                     longStr = longStr + str(dec);
                     longStr = longStr[0:2] + longStr[4:]
                     Long.append(longStr);
-
+    fp.close()
     print("You searched for: " + query)
     if (len(Cities) > 1):
-        return render_template('results.html', query=query, results=Cities, searchterm=searchTerm) 
-    else:
+        return render_template('results.html', query=query, results=Cities, searchterm=searchTerm, minTemp=minTemp, maxTemp=maxTemp, beginDate=beginDate, endDate=endDate) 
+    elif (len(Cities) == 0):
         return render_template('error.html')  
-    
-    return render_template('city.html', results=arr)
+    else: 
+        return render_template('city.html', results=arr)
 
 
 @app.route('/city', methods=['GET', 'POST'])
@@ -119,12 +135,17 @@ def city():
     endDate = data.get('endDate')
 
     searchTerm = data.get('searchterm')
-    results = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
-    arr = []
 
-    for line in results:
-        arr.append(City(line['City'], line['State'], datetime.strftime(line['Date'], "%Y-%m"), line['avgHigh'], line['avgLow'],line['avgUV'], line['totalSun'], line['avgSun'],line['totalSnow'], line['avgSnow'], line['totalRainfall'], line['avgRainfall'], line['avgHumidity'], line['pressure'], line['windSpeed'], line['avgTemp']))
-   
+    Cities = {}
+    arr = []
+    newArr = []
+    results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
+    
+    if (len(Cities) > 1):
+        for i in arr:
+            if (i.city == cityName):
+                newArr.append(i)
+    
     print(searchTerm)
     # Get data about city from query
     
@@ -132,8 +153,10 @@ def city():
     #                  0.0, 0.0, 0.0, 0.0, 0.0, 3.94, 0.13, 64.42, 1014.68, 10.26))
     # city.append(City("New York", "New York", "2017/8", 88.48, 77.0,
     #                  0.0, 0.0, 0.0, 0.0, 0.0, 3.94, 0.13, 64.42, 1014.68, 10.26))
-    return render_template('city.html', results=arr)
+    return render_template('city.html', results=newArr)
 
-
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    return render_template('homePage.html')
 if (__name__ == '__main__'):
     app.run(debug=True)
