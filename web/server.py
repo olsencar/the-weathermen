@@ -120,7 +120,7 @@ def results():
             if (i[0] == splitL[1] and i[1] == splitL[2]):
                 print("{} = {}".format(i, splitL[1]))
                 print(temp)
-                latnlon += "{},{},{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], Cities[i][2], Cities[i][3])
+                latnlon += "{},{},{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], i[2], i[3])
                 break;
     latnlon = latnlon[:-1]
 
@@ -166,7 +166,7 @@ def city():
         temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
         if (splitL[1] == newArr[0].city and splitL[2] == newArr[0].state):
             print("{} = {}".format(i, splitL[1]))
-            latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3])
+            latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], newArr[0].avgLow, newArr[0].avgHigh)
             break
     latnlon = latnlon[:-1]
 
@@ -191,7 +191,7 @@ def home():
             if (i[0] == splitL[1]):
                 print("{} = {}".format(i, splitL[1]))
                 print(temp)
-                latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3])
+                latnlon += "{},{},{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], i[2], i[3])
                 break
     latnlon = latnlon[:-1]
     fp.close()
