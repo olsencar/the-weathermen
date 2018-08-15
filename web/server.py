@@ -31,7 +31,7 @@ class City:
         self.avgWindSpeed = avgWindSpeed
         self.avgTemp = avgTemp
 
-def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
+def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, minRain, maxRain):
     splitSearch = searchTerm.split(',')
     
     if (len(splitSearch) > 1):
@@ -39,6 +39,11 @@ def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
         splitSearch[1].strip()
         
         searchTerm = "'{}' AND '{}')".format(splitSearch[0], splitSearch[1])
+
+    if (minRain == ''):
+        minRain = 0
+    if (maxRain == ''):
+        maxRain = 1000
 
     if (beginDate == ''):
         beginDate = "2017-6"
@@ -53,16 +58,23 @@ def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
 
     if (maxTemp == ''):
         maxTemp = "140"
-
+    
+    cityState = "{}, {}".format(city, state)
     print("searchterm: {}".format(searchTerm))
     with indexer.searcher() as searcher:
+        print("MIN RAIN", minRain)
         queryTest = MultifieldParser(["City", "avgTemp", "avgLow", "avgHigh", "State", "Date"], schema=indexer.schema).parse(searchTerm)
-        nr = NumericRange("avgTemp", int(minTemp), int(maxTemp));
+        nr = NumericRange("avgRainfall", float(minRain), float(maxRain))
+        np = NumericRange("avgTemp", float(minTemp), float(maxTemp))
+        query2 = MultifieldParser(["City", "avgTemp", "State", "Date", "avgRainfall"], schema=indexer.schema).parse(cityState)
 
-        # np = query.Term("City", "Portland");
-        
-        results = searcher.search(queryTest, filter=nr, limit=None)
-        print(results)
+        tempResults = searcher.search(query2, filter=np, limit=None)
+        rainResults = searcher.search(query2, filter=nr, limit=None)
+        # print(results2)
+        results = searcher.search(queryTest, limit=None)
+        print("LENGTH: of results", len(results))
+        results.filter(tempResults)
+        print("LENGTH: of results", len(results))
         
         arr = []
         Cities = []
@@ -89,6 +101,8 @@ def results():
     query = data.get('searchterm')
     cityName = data.get('city')
     stateName = data.get('state')
+    minRain = data.get('minRain')
+    maxRain = data.get('maxRain')
     minTemp = data.get('minTemp')
     maxTemp = data.get('maxTemp')
     beginDate = data.get('beginDate')
@@ -96,7 +110,7 @@ def results():
 
     searchTerm = query
     latnlon = ""
-    results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
+    results, Cities, arr = querySearch(searchTerm, cityName, stateName, beginDate, endDate, minTemp, maxTemp, minRain, maxRain)
     fp = open("../locations.csv", "r");
     for line in fp:
         splitL = line.split(',')
@@ -105,8 +119,7 @@ def results():
             if (i[0] == splitL[1] and i[1] == splitL[2]):
                 print("{} = {}".format(i, splitL[1]))
                 print(temp)
-                latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3])
-    latnlon = latnlon[:-1] 
+                latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3]) 
     
     fp.close()
     print("You searched for: " + query)
@@ -121,7 +134,8 @@ def results():
 @app.route('/city', methods=['GET', 'POST'])
 def city():
     data = request.args
-
+    minRain = data.get('minRain')
+    maxRain = data.get('maxRain')
     cityName = data.get('city')
     stateName = data.get('state')
     minTemp = data.get('minTemp')
@@ -135,13 +149,12 @@ def city():
     arr = []
     latnlon = ""
     newArr = []
-    results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
+    results, Cities, arr = querySearch(searchTerm, cityName, stateName, beginDate, endDate, minTemp, maxTemp, minRain, maxRain)
     
     if (len(Cities) > 1):
         for i in arr:
             if (i.city == cityName and i.state == stateName):
                 newArr.append(i)
-                break
     else:
         newArr = arr
     fp = open("../locations.csv", "r");
@@ -165,7 +178,7 @@ def sendfile(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    results, Cities, arr = querySearch("", '', '', '', '')
+    results, Cities, arr = querySearch("",'','', '', '', '', '', '', '')
     fp = open("../locations.csv", "r");
     latnlon = ""
     for line in fp:
