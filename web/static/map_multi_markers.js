@@ -19,10 +19,10 @@ function initialize() {
 
     for (var i = 0; i < newmarkers.length; i++) {
         var temp = [];
-        if (i % 4 == 0) {
-            temp.push(newmarkers[i - 4] + ", " + newmarkers[i - 3]); // City, State
-            temp.push(parseFloat(newmarkers[i - 2])); // Lat
-            temp.push(parseFloat(newmarkers[i - 1])); // Long
+        if (i % 6 == 0) {
+            temp.push(newmarkers[i - 6] + ", " + newmarkers[i - 5]); // City, State
+            temp.push(parseFloat(newmarkers[i - 4])); // Lat
+            temp.push(parseFloat(newmarkers[i - 3])); // Long
             temp.push(); // Low
             temp.push(); // High
             markers.push(temp);
