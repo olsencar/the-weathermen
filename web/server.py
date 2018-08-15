@@ -59,9 +59,11 @@ def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
         queryTest = MultifieldParser(["City", "avgTemp", "avgLow", "avgHigh", "State", "Date"], schema=indexer.schema).parse(searchTerm)
         nr = NumericRange("avgTemp", int(minTemp), int(maxTemp));
 
-        # np = query.Term("Index", 151);
+        np = query.Term("City", "Portland");
         
         results = searcher.search(queryTest, filter=nr, limit=None)
+        print(results)
+        
         arr = []
         Cities = {}
         for line in results:
