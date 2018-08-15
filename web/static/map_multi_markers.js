@@ -23,25 +23,15 @@ function initialize() {
 
     }
     markers.shift()
-    console.log(markers)
-    // if (document.getElementById('map').getAttribute('data-lat-lon')) {
-        
-    // }
     // Multiple Markers
 
     // Info Window Content
-    var infoWindowContent = [
-        ['<div class="info_content">' +
+    var content = ['<div class="info_content">' +
         '<h3>London Eye</h3>' +
-        '<p>The London Eye is a giant Ferris wheel situated on the banks of the River Thames. The entire structure is 135 metres (443 ft) tall and the wheel has a diameter of 120 metres (394 ft).</p>' +        '</div>'],
-        ['<div class="info_content">' +
-        '<h3>Palace of Westminster</h3>' +
-        '<p>The Palace of Westminster is the meeting place of the House of Commons and the House of Lords, the two houses of the Parliament of the United Kingdom. Commonly known as the Houses of Parliament after its tenants.</p>' +
-        '</div>']
-    ];
+        '<p>The London Eye is a giant Ferris wheel situated on the banks of the River Thames. The entire structure is 135 metres (443 ft) tall and the wheel has a diameter of 120 metres (394 ft).</p>' +        '</div>'];
 
     // Display multiple markers on a map
-    var infoWindow = new google.maps.InfoWindow(), marker, i;
+    var infoWindow = new google.maps.InfoWindow();
 
     // Loop through our array of markers & place each one on the map
     for( i = 0; i < markers.length; i++ ) {
@@ -54,22 +44,34 @@ function initialize() {
         });
 
         // Allow each marker to have an info window
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        google.maps.event.addListener(marker, 'click', (function(marker, content, infoWindow) {
             return function() {
-                infoWindow.setContent(infoWindowContent[i][0]);
-                infoWindow.open(map, marker);
+                var c = String(content);
+                infoWindow.setContent(c);
+                // infoWindow.setContent(infoWindow.getContent());
+                infoWindow.open(map,marker);                
             }
-        })(marker, i));
-
-        // Automatically center the map fitting all markers on the screen
-        map.fitBounds(bounds);
+        })(marker, content, infoWindow));
+        
     }
+    var position = new google.maps.LatLng(39.709052666183865, -99.63684006313935);
+    map.setCenter(position);
+    map.setZoom(map.getZoom());
+    // google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
+    //     this.setZoom(map.getZoom());
+        
+    //     if (this.getZoom() > 15) {
+    //       this.setZoom(15);
+    //     }
+    // });
+    map.fitBounds(bounds);
+    
 
-    // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
-    var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
-        this.setZoom(14);
-        google.maps.event.removeListener(boundsListener);
-    });
+    // // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
+    // var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+    //     this.setZoom(14);
+    //     google.maps.event.removeListener(boundsListener);
+    // });
     google.maps.event.addDomListener(window, 'load', initialize)
 
 }

@@ -16,17 +16,14 @@
 		<title>Results</title>
 		<style>
 			#map {
-				height: 700px;
-				width: 900px;
-				height: 800px;
-				width: 800px;
-				text-align: center;
-				margin-left: 51px;
+				height: 400px;
+				width: 600px;				
 				margin: 0px;
 				padding: 0px
 			}
 			.gm-style-iw{
-				height: 100% !important;
+				width: 100% !important;
+				/* height: 100% !important; */
 				overflow: hidden !important;
 			}
 		</style>
@@ -34,19 +31,25 @@
 
 	<body>
 		<h1>Results from query: {{query}}</h1>
-		<div class="container">
-			{% for i in results %}
-				<div class="result">
-					<a href="{{ url_for('city') }}?searchterm={{searchterm}}&city={{i}}&state={{results[i]}}&beginDate={{beginDate}}&endDate={{endDate}}&minTemp={{minTemp}}&maxTemp={{maxTemp}}">{{i}}, {{results[i]}}</a>
+		<!-- <div class="container"> -->
+			<div class="row">
+				<div class="col-md-6">
+					{% for i in results %}
+						<div class="result">
+							<a href="{{ url_for('city') }}?searchterm={{searchterm}}&city={{i}}&state={{results[i]}}&beginDate={{beginDate}}&endDate={{endDate}}&minTemp={{minTemp}}&maxTemp={{maxTemp}}">{{i}}, {{results[i]}}</a>
+						</div>
+					{% endfor %}
 				</div>
-			{% endfor %}
+				<div class="col-md-6">
+					<div id="map" data-lat-lon="{{latnlon}}" data-results={{result2}}></div>
+				</div>
+			</div>
+		<!-- </div> -->
+		<div class="container">
+			<form method="post" action="{{ url_for('home') }}">
+				<input type="submit" value="Return" />
+			</form>	
 		</div>
-		<center>
-			<div id="map" data-lat-lon="{{latnlon}}" data-results={{result2}}></div>
-		</center>
-		<form method="post" action="{{ url_for('home') }}">
-			<input type="submit" value="Return" />
-		</form>	
 
 		
 		<script src="{{url_for("static", filename="map_multi_markers.js")}}"></script>
