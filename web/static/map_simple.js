@@ -3,6 +3,10 @@ function initMap() {
   var bounds = new google.maps.LatLngBounds();
 
   var markStr = document.getElementById('map').getAttribute('data-lat-lon');
+  var markHigh = document.getElementById('map').getAttribute('high');
+  var markLow = document.getElementById('map').getAttribute('low');
+  console.log(markHigh)
+  console.log(markLow)
   var newmarkers = markStr.split(',');
   var markers = [];
 
@@ -23,10 +27,14 @@ function initMap() {
 
   var infoWindow = new google.maps.InfoWindow();
 
-  var content = ['<div class="info_content">' +
-    '<h3>London Eye</h3>' +
-    '<p>The London Eye is a giant Ferris wheel situated on the banks of the River Thames. The entire structure is 135 metres (443 ft) tall and the wheel has a diameter of 120 metres (394 ft).</p>' + '</div>'];
-    
+  var content = [
+    '<center><div class="info_content">' +
+    '<h2>' + String(newmarkers[0]) + '</h2>' +
+    '<h4>' + 'Low: ' +  String(markLow) + '</h4>' +
+    '<h4>' + 'High: ' +  String(markHigh) + '</h4>' +
+    '</div></center>'
+  ];
+
   var position = new google.maps.LatLng(markers[1], markers[2]);
   bounds.extend(position);
   marker = new google.maps.Marker({

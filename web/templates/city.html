@@ -6,10 +6,10 @@
 		<!-- Required for bootstrap 3 -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	
+
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<!-- <script src="/static/map_simple.js"></script> -->
-		
+
 		<title>The Weathermen | {{results[0].city}}</title>
 		<style>
 			#map {
@@ -30,14 +30,13 @@
 			<a href="/" class="a-no-underline"><h1 class="text-center">The Weathermen</h1></a>
 		</div>
 		<div class="container">
-			<h3>{{results[0].city}}, {{results[0].state}}</h3>
+			<h2>{{results[0].city}}, {{results[0].state}}</h2>
 		</div>
 		<div class="container text-center">
-			<div id="map" data-lat-lon="{{latnlon}}" data-results={{results}}></div>
+			<div id="map" data-lat-lon="{{latnlon}}" data-results={{results}} high={{results[0].avgHigh}} low={{results[0].avgLow}}></div>
 		</div>
 		<div class="container">
 			<table class="table table-bordered table-hover">
-				
 				<th>Date</th>
 				<th>Avg High (&deg;F)</th>
 				<th>Avg Low (&deg;F)</th>
@@ -51,7 +50,7 @@
 				<th>Avg Humidity (%)</th>
 				<th>Avg Pressure (mb)</th>
 				<th>Avg Windspeed (mph)</th>
-				
+
 				{% for date in results %}
 					<tr>
 						<td>{{date.date}}</td>
@@ -72,10 +71,10 @@
 			</table>
 		</div>
 		<form method="get" action="{{ url_for('home') }}">
-			<input class="btn btn-default" type="submit" value="Return" />		
-		</form>	
-		
+			<input class="btn btn-default" type="submit" value="Return" />
+		</form>
+
 		<script src="{{url_for("static", filename="map_simple.js")}}"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUFWCJQ7VquNihgeFJsPBbOkpwYIUxZa0&callback=initMap"></script>
-	</body>	
+	</body>
 </html>
