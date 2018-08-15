@@ -40,9 +40,9 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
         searchTerm = "'{}' AND '{}')".format(splitSearch[0], splitSearch[1])
         searchTerm1 = searchTerm
 
-    if (minRain == ''):
+    if (minRain == '' or minRain == None):
         minRain = 0
-    if (maxRain == ''):
+    if (maxRain == '' or maxRain == None):
         maxRain = 1000
 
     if (beginDate == ''):
@@ -53,10 +53,10 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
         endDate = "2018-6"
     searchTerm += "{}] ".format(endDate)
 
-    if (minTemp == ''):
+    if (minTemp == '' or minTemp == None):
         minTemp = "-80"
 
-    if (maxTemp == ''):
+    if (maxTemp == '' or MaxTemp == None):
         maxTemp = "140"
 
     cityState = "{}, {}".format(city, state)
@@ -71,10 +71,12 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
 
         tempResults = searcher.search(query2, filter=np, limit=None)
         rainResults = searcher.search(query2, filter=nr, limit=None)
+        print(rainResults)
         print(tempResults)
         results = searcher.search(queryTest, limit=None)
         print("LENGTH: of results", len(results))
         results.filter(tempResults)
+        results.filter(rainResults)
         print("LENGTH: of results", len(results))
 
         arr = []

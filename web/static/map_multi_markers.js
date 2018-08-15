@@ -23,8 +23,8 @@ function initialize() {
             temp.push(newmarkers[i - 6] + ", " + newmarkers[i - 5]); // City, State
             temp.push(parseFloat(newmarkers[i - 4])); // Lat
             temp.push(parseFloat(newmarkers[i - 3])); // Long
-            temp.push(); // Low
-            temp.push(); // High
+            temp.push(parseFloat(newmarkers[i - 2])); // Low
+            temp.push(parseFloat(newmarkers[i - 1])); // High
             markers.push(temp);
             console.log(temp)
         }
