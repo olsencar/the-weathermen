@@ -33,12 +33,12 @@ class City:
 
 def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, minRain, maxRain):
     splitSearch = searchTerm.split(',')
-    
+    searchTerm1 = searchTerm
     if (len(splitSearch) > 1):
         splitSearch[0].strip()
         splitSearch[1].strip()
-        
         searchTerm = "'{}' AND '{}')".format(splitSearch[0], splitSearch[1])
+        searchTerm1 = searchTerm
 
     if (minRain == ''):
         minRain = 0
@@ -64,13 +64,14 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
     with indexer.searcher() as searcher:
         print("MIN RAIN", minRain)
         queryTest = MultifieldParser(["City", "avgTemp", "avgLow", "avgHigh", "State", "Date"], schema=indexer.schema).parse(searchTerm)
-        nr = NumericRange("avgRainfall", float(minRain), float(maxRain))
         np = NumericRange("avgTemp", float(minTemp), float(maxTemp))
-        query2 = MultifieldParser(["City", "avgTemp", "State", "Date", "avgRainfall"], schema=indexer.schema).parse(cityState)
+        nr = NumericRange("avgRainfall", float(minRain), float(maxRain))
+        
+        query2 = MultifieldParser(["City", "avgTemp", "State", "Date", "avgRainfall"], schema=indexer.schema).parse(searchTerm1)
 
         tempResults = searcher.search(query2, filter=np, limit=None)
         rainResults = searcher.search(query2, filter=nr, limit=None)
-        # print(results2)
+        print(tempResults)
         results = searcher.search(queryTest, limit=None)
         print("LENGTH: of results", len(results))
         results.filter(tempResults)
@@ -82,14 +83,14 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
         for line in results:
             found = False
             if (len(Cities) == 0):
-                Cities.append([line['City'], line['State']])
+                Cities.append([line['City'], line['State'], line['avgLow'], line['avgHigh']])
             else:
                 for i in Cities:
                     if (line['City'] == i[0] and line['State'] == i[1]):
                         found = True
                         break
                 if (not found):
-                    Cities.append([line['City'], line['State']])    
+                    Cities.append([line['City'], line['State'], line['avgLow'], line['avgHigh']])    
             arr.append(City(line['City'], line['State'], datetime.strftime(line['Date'], "%Y-%m"), line['avgHigh'], line['avgLow'],line['avgUV'], line['totalSun'], line['avgSun'],line['totalSnow'], line['avgSnow'], line['totalRainfall'], line['avgRainfall'], line['avgHumidity'], line['pressure'], line['windSpeed'], line['avgTemp']))
         for key in Cities:
             print("City: " + key[0] + " State: " + key[1]);
