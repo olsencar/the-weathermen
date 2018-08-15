@@ -2,8 +2,34 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="{{url_for("static", filename="main.css")}}">
+		<!-- Required for bootstrap 3 -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<!-- <script async defer
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUFWCJQ7VquNihgeFJsPBbOkpwYIUxZa0&callback=initialize">
+		</script> -->
+		<!-- <script src="/static/map_simple.js"></script> -->
 		<title>Results</title>
+		<style>
+			#map {
+				height: 700px;
+				width: 900px;
+				height: 800px;
+				width: 800px;
+				text-align: center;
+				margin-left: 51px;
+				margin: 0px;
+				padding: 0px
+			}
+			.gm-style-iw{
+				height: 100% !important;
+				overflow: hidden !important;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -15,8 +41,15 @@
 				</div>
 			{% endfor %}
 		</div>
+		<center>
+			<div id="map" data-lat-lon="{{latnlon}}" data-results={{result2}}></div>
+		</center>
 		<form method="post" action="{{ url_for('home') }}">
 			<input type="submit" value="Return" />
 		</form>	
+
+		
+		<script src="{{url_for("static", filename="map_multi_markers.js")}}"></script>
+  		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUFWCJQ7VquNihgeFJsPBbOkpwYIUxZa0&callback=initialize"></script>
 	</body>	
 </html>

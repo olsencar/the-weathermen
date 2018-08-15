@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, request, send_from_directory
 from datetime import datetime
+import json
 import whoosh
 import whoosh.index as indexUSE
 from whoosh.analysis import *
@@ -9,7 +10,7 @@ from whoosh.qparser import MultifieldParser
 from whoosh.query import *
 from whoosh.searching import *
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 
 class City:
     def __init__(self, city, state, date, avgHigh, avgLow, uvIndex, totalSunHours, avgSunHours, totalSnow, avgSnow, totalRainfall, avgRainfall, avgHumidity, avgPressure, avgWindSpeed, avgTemp):
@@ -85,38 +86,24 @@ def results():
     endDate = data.get('endDate')
 
     searchTerm = query
-
+    latnlon = ""
     results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
     fp = open("../locations.csv", "r");
-    head = next(fp);
-    Lat = [];
-    Long = [];
-   
     for line in fp:
-        row  = line.split(",");
+        splitL = line.split(',')
+        temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
         for i in Cities:
-            if (i == row[1]):
-                latStr = row[3][0] + row[3][1] + ".";
-                dec = float(row[3][4] + row[3][5])/60 + float(row[3][7] + row[3][8])/3600;
-                latStr = latStr + str(dec);
-                latStr = latStr[0:2] + latStr[4:]
-                Lat.append(latStr);
-                if ((row[4][2]) >= '0' and (row[4][2]) <= '9'):
-                    longStr = row[4][0] + row[4][1] + row[4][2] + ".";
-                    dec = float(row[4][5] + row[4][6])/60 + float(row[4][8] + row[4][9])/3600;
-                    longStr = longStr + str(dec);
-                    longStr = longStr[0:2] + longStr[4:]
-                    Long.append(longStr);
-                else:
-                    longStr = row[4][0] + row[4][1] + ".";
-                    dec = float(row[4][4] + row[4][5])/60 + float(row[4][7] + row[4][8])/3600;
-                    longStr = longStr + str(dec);
-                    longStr = longStr[0:2] + longStr[4:]
-                    Long.append(longStr);
+            if (i == splitL[1]):
+                print("{} = {}".format(i, splitL[1]))
+                print(temp)
+                latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3])
+                break;
+    latnlon = latnlon[:-1] 
+    
     fp.close()
     print("You searched for: " + query)
     if (len(Cities) > 1):
-        return render_template('results.html', query=query, results=Cities, searchterm=searchTerm, minTemp=minTemp, maxTemp=maxTemp, beginDate=beginDate, endDate=endDate) 
+        return render_template('results.html', latnlon=latnlon, query=query, results=Cities, result2=arr, searchterm=searchTerm, minTemp=minTemp, maxTemp=maxTemp, beginDate=beginDate, endDate=endDate) 
     elif (len(Cities) == 0):
         return render_template('error.html')  
     else: 
@@ -155,6 +142,9 @@ def city():
     #                  0.0, 0.0, 0.0, 0.0, 0.0, 3.94, 0.13, 64.42, 1014.68, 10.26))
     return render_template('city.html', results=newArr)
 
+@app.route('/<path:filename>')
+def sendfile(filename):
+    return send_from_directory(app.static_folder, filename)
 @app.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('homePage.html')

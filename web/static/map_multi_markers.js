@@ -1,10 +1,3 @@
-jQuery(function($) {
-    // Asynchronously Load the map API
-    var script = document.createElement('script');
-    script.src = "//maps.googleapis.com/maps/api/js?key=AIzaSyDUFWCJQ7VquNihgeFJsPBbOkpwYIUxZa0&callback=initialize";
-    document.body.appendChild(script);
-});
-
 function initialize() {
     var map;
     var bounds = new google.maps.LatLngBounds();
@@ -15,12 +8,26 @@ function initialize() {
     // Display a map on the page
     map = new google.maps.Map(document.getElementById("map"), mapOptions);
     map.setTilt(45);
+    
+    var markStr = document.getElementById('map').getAttribute('data-lat-lon');
+    var newmarkers = markStr.split(',');
+    var markers = [];
+    for (var i = 0; i < newmarkers.length; i++) {
+        var temp = [];
+        if (i % 4 == 0) {
+            temp.push(newmarkers[i - 4] + ", " + newmarkers[i - 3]);
+            temp.push(parseFloat(newmarkers[i - 2]));
+            temp.push(parseFloat(newmarkers[i - 1]));
+            markers.push(temp);
+        } 
 
+    }
+    markers.shift()
+    console.log(markers)
+    // if (document.getElementById('map').getAttribute('data-lat-lon')) {
+        
+    // }
     // Multiple Markers
-    var markers = [
-        ['London Eye, London', 51.503454,-0.119562],
-        ['Palace of Westminster, London', 51.499633,-0.124755]
-    ];
 
     // Info Window Content
     var infoWindowContent = [
@@ -63,5 +70,7 @@ function initialize() {
         this.setZoom(14);
         google.maps.event.removeListener(boundsListener);
     });
+    google.maps.event.addDomListener(window, 'load', initialize)
 
 }
+

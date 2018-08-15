@@ -8,14 +8,24 @@
     <!-- Required for bootstrap 3 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <title>The Weathermen</title>
 
     <style>
       #map {
-        height: 75%;
-        width: 89%;
+        height: 700px;
+        width: 900px;
+        height: 800px;
+        width: 800px;
+        text-align: center;
+        margin-left: 51px;
+        margin: 0px;
+        padding: 0px
+      }
+      .gm-style-iw{
+       height: 100% !important;
+       overflow: hidden !important;
       }
     </style>
 </head>
@@ -61,27 +71,9 @@
     <div id="map"></div>
   </center>
 
-  <script>
-    function initMap() {
-      var myLatLng = {lat: 44.564568, lng: -123.262047};
-
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 9,
-        center: myLatLng
-      });
-
-      var marker = new google.maps.Marker({
-        position: myLatLng,
-        map: map,
-        title: 'Hello World!'
-      });
-    }
-  </script>
-
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUFWCJQ7VquNihgeFJsPBbOkpwYIUxZa0&callback=initMap">
-  </script>
-
+  <script src="{{url_for("static", filename="map_multi_markers.js")}}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUFWCJQ7VquNihgeFJsPBbOkpwYIUxZa0&callback=initialize">
+  </script> 
 </body>
 
 </html>
