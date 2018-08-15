@@ -48,7 +48,7 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
     if (beginDate == ''):
         beginDate = "2017-6"
     searchTerm += " [{} to ".format(beginDate)
-   
+
     if (endDate == ''):
         endDate = "2018-6"
     searchTerm += "{}] ".format(endDate)
@@ -58,7 +58,7 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
 
     if (maxTemp == ''):
         maxTemp = "140"
-    
+
     cityState = "{}, {}".format(city, state)
     print("searchterm: {}".format(searchTerm))
     with indexer.searcher() as searcher:
@@ -76,10 +76,10 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
         print("LENGTH: of results", len(results))
         results.filter(tempResults)
         print("LENGTH: of results", len(results))
-        
+
         arr = []
         Cities = []
-        
+
         for line in results:
             found = False
             if (len(Cities) == 0):
@@ -120,15 +120,17 @@ def results():
             if (i[0] == splitL[1] and i[1] == splitL[2]):
                 print("{} = {}".format(i, splitL[1]))
                 print(temp)
-                latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3]) 
-    
+                latnlon += "{},{},{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], Cities[i][2], Cities[i][3])
+                break;
+    latnlon = latnlon[:-1]
+
     fp.close()
     print("You searched for: " + query)
     if (len(Cities) > 1):
-        return render_template('results.html', latnlon=latnlon, query=query, results=Cities, result2=arr, searchterm=searchTerm, minTemp=minTemp, maxTemp=maxTemp, beginDate=beginDate, endDate=endDate) 
+        return render_template('results.html', latnlon=latnlon, query=query, results=Cities, result2=arr, searchterm=searchTerm, minTemp=minTemp, maxTemp=maxTemp, beginDate=beginDate, endDate=endDate)
     elif (len(Cities) == 0):
-        return render_template('error.html')  
-    else: 
+        return render_template('error.html')
+    else:
         return render_template('city.html', latnlon=latnlon, results=arr)
 
 
@@ -151,7 +153,7 @@ def city():
     latnlon = ""
     newArr = []
     results, Cities, arr = querySearch(searchTerm, cityName, stateName, beginDate, endDate, minTemp, maxTemp, minRain, maxRain)
-    
+
     if (len(Cities) > 1):
         for i in arr:
             if (i.city == cityName and i.state == stateName):
@@ -166,10 +168,10 @@ def city():
             print("{} = {}".format(i, splitL[1]))
             latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3])
             break
-    latnlon = latnlon[:-1] 
-    
+    latnlon = latnlon[:-1]
+
     fp.close()
-    
+
     print(searchTerm)
     return render_template('city.html', latnlon=latnlon, results=newArr)
 
@@ -194,5 +196,6 @@ def home():
     latnlon = latnlon[:-1]
     fp.close()
     return render_template('homePage.html', latnlon=latnlon, results=arr)
+
 if (__name__ == '__main__'):
     app.run(debug=True)
