@@ -14,26 +14,22 @@
 
     <style>
       #map {
-        height: 700px;
-        width: 900px;
-        height: 800px;
-        width: 800px;
-        text-align: center;
-        margin-left: 51px;
-        margin: 0px;
-        padding: 0px
+        height: 450px;
+        /* min-width: 900px; */
+        width: 100% !important;
       }
       .gm-style-iw{
-       height: 100% !important;
+        width: 100% !important;
+       /* height: 100% !important; */
        overflow: hidden !important;
       }
     </style>
 </head>
 
 <body>
-  <header>
-      <h1 class="text-center">The Weathermen</h1>
-  </header>
+    <div class="page-header">
+        <a href="/" class="a-no-underline"><h1 class="text-center">The Weathermen</h1></a>
+    </div>
 
   <form method="get" action="{{ url_for("results") }}" class="input-group center-block">
     <div class="container">
@@ -67,9 +63,9 @@
     </div>
   </form>
 
-  <center>
-    <div id="map"></div>
-  </center>
+  <div class="container text-center">
+    <div id="map" data-lat-lon="{{latnlon}}" data-results={{results}}></div>
+  </div>
 
   <script src="{{url_for("static", filename="map_multi_markers.js")}}"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUFWCJQ7VquNihgeFJsPBbOkpwYIUxZa0&callback=initialize">

@@ -14,8 +14,20 @@
     border-radius: 6px;
     padding: 5px;
 }
+.panel-body {
+    border-top: 0.5px solid gray;
+    border-left: 0.5px solid gray;
+    border-right: 0.5px solid gray;
+}
+.a-no-underline {
+    text-decoration: none !important;
 
-#map {
-  height: 50%;
-  width: 50%;
+    color: inherit;
+}
+
+.a-no-underline:hover {
+    color:inherit;
+}
+#results-container {
+    padding-left: 30px;
 }

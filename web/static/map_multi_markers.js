@@ -12,15 +12,29 @@ function initialize() {
     var markStr = document.getElementById('map').getAttribute('data-lat-lon');
     var newmarkers = markStr.split(',');
     var markers = [];
-    for (var i = 0; i < newmarkers.length; i++) {
+    
+    if (newmarkers.length === 4) {
         var temp = [];
-        if (i % 4 == 0) {
-            temp.push(newmarkers[i - 4] + ", " + newmarkers[i - 3]);
-            temp.push(parseFloat(newmarkers[i - 2]));
-            temp.push(parseFloat(newmarkers[i - 1]));
-            markers.push(temp);
-        } 
+        temp.push(newmarkers[0] + ", " + newmarkers[1]);
+        temp.push(parseFloat(newmarkers[2]));
+        temp.push(parseFloat(newmarkers[3]));
+        markers.push(temp);
+        console.log(temp)
+        
+    }
+    else {
+        for (var i = 0; i < newmarkers.length; i++) {
+            
+            var temp = [];
+            if (i % 4 == 0) {
+                temp.push(newmarkers[i - 4] + ", " + newmarkers[i - 3]);
+                temp.push(parseFloat(newmarkers[i - 2]));
+                temp.push(parseFloat(newmarkers[i - 1]));
+                markers.push(temp);
+                console.log(temp)
+            } 
 
+        }
     }
     markers.shift()
     // Multiple Markers

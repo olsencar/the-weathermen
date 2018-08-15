@@ -30,24 +30,29 @@
 	</head>
 
 	<body>
-		<h1>Results from query: {{query}}</h1>
+		<div class="page-header">
+			<a href="/" class="a-no-underline"><h1 class="text-center">The Weathermen</h1></a>
+		</div>
 		<!-- <div class="container"> -->
-			<div class="row">
-				<div class="col-md-6">
-					{% for i in results %}
-						<div class="result">
-							<a href="{{ url_for('city') }}?searchterm={{searchterm}}&city={{i}}&state={{results[i]}}&beginDate={{beginDate}}&endDate={{endDate}}&minTemp={{minTemp}}&maxTemp={{maxTemp}}">{{i}}, {{results[i]}}</a>
-						</div>
-					{% endfor %}
+		<div class="row">
+			<div class="col-md-6 panel panel-default" id="results-container">
+				<div class="panel-heading">
+					<h3>Results: {{query}}</h3>
 				</div>
-				<div class="col-md-6">
-					<div id="map" data-lat-lon="{{latnlon}}" data-results={{result2}}></div>
-				</div>
+				{% for i in results %}
+					<div class="panel-body">
+						<a href="{{ url_for('city') }}?searchterm={{searchterm}}&city={{i}}&state={{results[i]}}&beginDate={{beginDate}}&endDate={{endDate}}&minTemp={{minTemp}}&maxTemp={{maxTemp}}">{{i}}, {{results[i]}}</a>
+					</div>
+				{% endfor %}
 			</div>
+			<div class="col-md-6">
+				<div id="map" data-lat-lon="{{latnlon}}" data-results={{result2}}></div>
+			</div>
+		</div>
 		<!-- </div> -->
 		<div class="container">
 			<form method="post" action="{{ url_for('home') }}">
-				<input type="submit" value="Return" />
+				<input class="btn btn-default" type="submit" value="Return" />
 			</form>	
 		</div>
 

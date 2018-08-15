@@ -107,7 +107,7 @@ def results():
     elif (len(Cities) == 0):
         return render_template('error.html')  
     else: 
-        return render_template('city.html', results=arr)
+        return render_template('city.html', latnlon=latnlon, results=arr)
 
 
 @app.route('/city', methods=['GET', 'POST'])
@@ -132,21 +132,45 @@ def city():
         for i in arr:
             if (i.city == cityName):
                 newArr.append(i)
+
+    latnlon = ""
+    results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
+
+    fp = open("../locations.csv", "r");
+    for line in fp:
+        splitL = line.split(',')
+        temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
+        if (splitL[1] == cityName):
+            print("{} = {}".format(i, splitL[1]))
+            latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3])
+            break
+    latnlon = latnlon[:-1] 
+    
+    fp.close()
     
     print(searchTerm)
-    # Get data about city from query
-    
-    # city.append(City("New York", "New York", "2017/7", 88.48, 77.0,
-    #                  0.0, 0.0, 0.0, 0.0, 0.0, 3.94, 0.13, 64.42, 1014.68, 10.26))
-    # city.append(City("New York", "New York", "2017/8", 88.48, 77.0,
-    #                  0.0, 0.0, 0.0, 0.0, 0.0, 3.94, 0.13, 64.42, 1014.68, 10.26))
-    return render_template('city.html', results=newArr)
+    return render_template('city.html', latnlon=latnlon, results=newArr)
 
 @app.route('/<path:filename>')
 def sendfile(filename):
     return send_from_directory(app.static_folder, filename)
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('homePage.html')
+    results, Cities, arr = querySearch("", '', '', '', '')
+    fp = open("../locations.csv", "r");
+    latnlon = ""
+    for line in fp:
+        splitL = line.split(',')
+        temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
+        for i in Cities:
+            if (i == splitL[1]):
+                print("{} = {}".format(i, splitL[1]))
+                print(temp)
+                latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3])
+                break
+    latnlon = latnlon[:-1]
+    fp.close()
+    return render_template('homePage.html', latnlon=latnlon, results=arr)
 if (__name__ == '__main__'):
     app.run(debug=True)
