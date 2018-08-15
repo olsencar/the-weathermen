@@ -31,7 +31,7 @@ class City:
         self.avgWindSpeed = avgWindSpeed
         self.avgTemp = avgTemp
 
-def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
+def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, minRain, maxRain):
     splitSearch = searchTerm.split(',')
 
     if (len(splitSearch) > 1):
@@ -39,6 +39,11 @@ def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
         splitSearch[1].strip()
 
         searchTerm = "'{}' AND '{}')".format(splitSearch[0], splitSearch[1])
+
+    if (minRain == ''):
+        minRain = 0
+    if (maxRain == ''):
+        maxRain = 1000
 
     if (beginDate == ''):
         beginDate = "2017-6"
@@ -54,26 +59,40 @@ def querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp):
     if (maxTemp == ''):
         maxTemp = "140"
 
+    cityState = "{}, {}".format(city, state)
     print("searchterm: {}".format(searchTerm))
     with indexer.searcher() as searcher:
+        print("MIN RAIN", minRain)
         queryTest = MultifieldParser(["City", "avgTemp", "avgLow", "avgHigh", "State", "Date"], schema=indexer.schema).parse(searchTerm)
-        nr = NumericRange("avgTemp", int(minTemp), int(maxTemp));
+        nr = NumericRange("avgRainfall", float(minRain), float(maxRain))
+        np = NumericRange("avgTemp", float(minTemp), float(maxTemp))
+        query2 = MultifieldParser(["City", "avgTemp", "State", "Date", "avgRainfall"], schema=indexer.schema).parse(cityState)
 
-        np = query.Term("City", "Portland");
-
-        results = searcher.search(queryTest, filter=nr, limit=None)
-        print(results)
+        tempResults = searcher.search(query2, filter=np, limit=None)
+        rainResults = searcher.search(query2, filter=nr, limit=None)
+        # print(results2)
+        results = searcher.search(queryTest, limit=None)
+        print("LENGTH: of results", len(results))
+        results.filter(tempResults)
+        print("LENGTH: of results", len(results))
 
         arr = []
-        Cities = {}
+        Cities = []
+
         for line in results:
-            if line['City'] in Cities:
-                pass;
+            found = False
+            if (len(Cities) == 0):
+                Cities.append([line['City'], line['State']])
             else:
-                Cities[line['City']] = line['State'];
+                for i in Cities:
+                    if (line['City'] == i[0] and line['State'] == i[1]):
+                        found = True
+                        break
+                if (not found):
+                    Cities.append([line['City'], line['State']])
             arr.append(City(line['City'], line['State'], datetime.strftime(line['Date'], "%Y-%m"), line['avgHigh'], line['avgLow'],line['avgUV'], line['totalSun'], line['avgSun'],line['totalSnow'], line['avgSnow'], line['totalRainfall'], line['avgRainfall'], line['avgHumidity'], line['pressure'], line['windSpeed'], line['avgTemp']))
         for key in Cities:
-            print("City: " + key + " State: " + Cities[key]);
+            print("City: " + key[0] + " State: " + key[1]);
     return results, Cities, arr
 
 @app.route('/results', methods=['GET', 'POST'])
@@ -82,6 +101,8 @@ def results():
     query = data.get('searchterm')
     cityName = data.get('city')
     stateName = data.get('state')
+    minRain = data.get('minRain')
+    maxRain = data.get('maxRain')
     minTemp = data.get('minTemp')
     maxTemp = data.get('maxTemp')
     beginDate = data.get('beginDate')
@@ -89,13 +110,13 @@ def results():
 
     searchTerm = query
     latnlon = ""
-    results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
+    results, Cities, arr = querySearch(searchTerm, cityName, stateName, beginDate, endDate, minTemp, maxTemp, minRain, maxRain)
     fp = open("../locations.csv", "r");
     for line in fp:
         splitL = line.split(',')
         temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
         for i in Cities:
-            if (i == splitL[1]):
+            if (i[0] == splitL[1] and i[1] == splitL[2]):
                 print("{} = {}".format(i, splitL[1]))
                 print(temp)
                 latnlon += "{},{},{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], Cities[i][2], Cities[i][3])
@@ -115,7 +136,8 @@ def results():
 @app.route('/city', methods=['GET', 'POST'])
 def city():
     data = request.args
-
+    minRain = data.get('minRain')
+    maxRain = data.get('maxRain')
     cityName = data.get('city')
     stateName = data.get('state')
     minTemp = data.get('minTemp')
@@ -125,25 +147,24 @@ def city():
 
     searchTerm = data.get('searchterm')
 
-    Cities = {}
+    Cities = []
     arr = []
+    latnlon = ""
     newArr = []
-    results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
+    results, Cities, arr = querySearch(searchTerm, cityName, stateName, beginDate, endDate, minTemp, maxTemp, minRain, maxRain)
 
     if (len(Cities) > 1):
         for i in arr:
-            if (i.city == cityName):
+            if (i.city == cityName and i.state == stateName):
                 newArr.append(i)
-
-    latnlon = ""
-    results, Cities, arr = querySearch(searchTerm, beginDate, endDate, minTemp, maxTemp)
-
+    else:
+        newArr = arr
     fp = open("../locations.csv", "r");
     for line in fp:
         splitL = line.split(',')
         temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
-        if (splitL[1] == cityName):
-            #print("{} = {}".format(i, splitL[1]))
+        if (splitL[1] == newArr[0].city and splitL[2] == newArr[0].state):
+            print("{} = {}".format(i, splitL[1]))
             latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3])
             break
     latnlon = latnlon[:-1]
@@ -159,15 +180,16 @@ def sendfile(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    results, Cities, arr = querySearch("", '', '', '', '')
+    results, Cities, arr = querySearch("",'','', '', '', '', '', '', '')
     fp = open("../locations.csv", "r");
     latnlon = ""
     for line in fp:
         splitL = line.split(',')
         temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
         for i in Cities:
-            if (i == splitL[1]):
-                #print("{} = {}".format(i, splitL[1]))
+            if (i[0] == splitL[1]):
+                print("{} = {}".format(i, splitL[1]))
+                print(temp)
                 latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3])
                 break
     latnlon = latnlon[:-1]
