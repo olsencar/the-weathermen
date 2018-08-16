@@ -4,6 +4,7 @@ import csv
 import os
 from datetime import datetime
 from whoosh.index import create_in
+from whoosh.analysis import StemmingAnalyzer
 from whoosh.fields import *
 from whoosh.qparser import QueryParser
 from whoosh.qparser import MultifieldParser
@@ -28,7 +29,8 @@ def search(indexer, searchTerm):
 			'''
 			
 def index():
-	schema = Schema(City=TEXT(stored=True), Index=NUMERIC(stored=True), State=TEXT(stored=True), Date=DATETIME(stored=True), avgHigh=NUMERIC(float, stored=True), avgLow=NUMERIC(float, stored=True), avgUV=NUMERIC(float, stored=True), totalSun=NUMERIC(float, stored=True), avgSun=NUMERIC(float, stored=True), totalSnow=NUMERIC(float, stored=True), avgSnow=NUMERIC(float, stored=True), totalRainfall=NUMERIC(float, stored=True), avgRainfall=NUMERIC(float, stored=True), avgHumidity=NUMERIC(float, stored=True), pressure=NUMERIC(float, stored=True), windSpeed=NUMERIC(float, stored=True), avgTemp=NUMERIC(float, stored=True));
+	stem_ana = StemmingAnalyzer()
+	schema = Schema(City=TEXT(stored=True, analyzer=stem_ana), Index=NUMERIC(stored=True), State=TEXT(stored=True, analyzer=stem_ana), Date=DATETIME(stored=True), avgHigh=NUMERIC(float, stored=True), avgLow=NUMERIC(float, stored=True), avgUV=NUMERIC(float, stored=True), totalSun=NUMERIC(float, stored=True), avgSun=NUMERIC(float, stored=True), totalSnow=NUMERIC(float, stored=True), avgSnow=NUMERIC(float, stored=True), totalRainfall=NUMERIC(float, stored=True), avgRainfall=NUMERIC(float, stored=True), avgHumidity=NUMERIC(float, stored=True), pressure=NUMERIC(float, stored=True), windSpeed=NUMERIC(float, stored=True), avgTemp=NUMERIC(float, stored=True));
 	indexer = create_in("indexedData", schema)
 	
 	writer = indexer.writer()

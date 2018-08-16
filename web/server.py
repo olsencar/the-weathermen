@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, send_from_directory
 from datetime import datetime
 import json
+import re
 import whoosh
 import whoosh.index as indexUSE
 from whoosh.analysis import *
@@ -32,6 +33,8 @@ class City:
         self.avgTemp = avgTemp
 
 def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, minRain, maxRain):
+    searchTerm = re.sub('[^A-Za-z, ]+', '', searchTerm)
+    print(searchTerm)
     splitSearch = searchTerm.split(',')
     searchTerm1 = searchTerm
     if (len(splitSearch) > 1):
@@ -85,7 +88,7 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
                 Cities.append([line['City'], line['State'], line['avgLow'], line['avgHigh']])
             else:
                 for i in Cities:
-                    if (line['City'] == i[0] and line['State'] == i[1]):
+                    if (line['City'].lower() == i[0].lower() and line['State'].lower() == i[1].lower()):
                         found = True
                         break
                 if (not found):
@@ -116,7 +119,7 @@ def results():
         splitL = line.split(',')
         temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
         for i in Cities:
-            if (i[0] == splitL[1] and i[1] == splitL[2]):
+            if (i[0].lower() == splitL[1].lower() and i[1].lower() == splitL[2].lower()):
                 print("{} = {}".format(i, splitL[1]))
                 print(temp)
                 latnlon += "{},{},{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], i[2], i[3])
@@ -154,7 +157,7 @@ def city():
 
     if (len(Cities) > 1):
         for i in arr:
-            if (i.city == cityName and i.state == stateName):
+            if (i.city.lower() == cityName.lower() and i.state.lower() == stateName.lower()):
                 newArr.append(i)
     else:
         newArr = arr
