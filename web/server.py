@@ -101,6 +101,7 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
 @app.route('/results', methods=['GET', 'POST'])
 def results():
     data = request.args
+    print(data)
     query = data.get('searchterm')
     cityName = data.get('city')
     stateName = data.get('state')
@@ -120,24 +121,23 @@ def results():
         temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
         for i in Cities:
             if (i[0].lower() == splitL[1].lower() and i[1].lower() == splitL[2].lower()):
-                print("{} = {}".format(i, splitL[1]))
-                print(temp)
                 latnlon += "{},{},{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], i[2], i[3])
                 break;
 
     fp.close()
     print("You searched for: " + query)
     if (len(Cities) > 1):
-        return render_template('results.html', latnlon=latnlon, query=query, results=Cities, result2=arr, searchterm=searchTerm, minTemp=minTemp, maxTemp=maxTemp, beginDate=beginDate, endDate=endDate)
+        return render_template('results.html', latnlon=latnlon, query=query, results=Cities, result2=arr, searchterm=searchTerm, minTemp=minTemp, maxTemp=maxTemp, minRain=minRain, maxRain=maxRain, beginDate=beginDate, endDate=endDate)
     elif (len(Cities) == 0):
         return render_template('error.html')
     else:
         return render_template('city.html', latnlon=latnlon, results=arr)
 
 
-@app.route('/city', methods=['GET', 'POST'])
+@app.route('/city', methods=['GET'])
 def city():
     data = request.args
+    print(data)
     minRain = data.get('minRain')
     maxRain = data.get('maxRain')
     cityName = data.get('city')
@@ -174,6 +174,7 @@ def city():
     fp.close()
 
     print(searchTerm)
+    print("IN CITIES")
     return render_template('city.html', latnlon=latnlon, results=newArr)
 
 @app.route('/<path:filename>')
