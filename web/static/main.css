@@ -14,6 +14,10 @@
     border-radius: 6px;
     padding: 5px;
 }
+#forecast-container {
+    /* margin-top: 5px; */
+    margin-bottom: 10px;
+}
 .panel-body {
     border-top: 0.5px solid gray;
     border-left: 0.5px solid gray;

@@ -56,7 +56,7 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
     if (minTemp == '' or minTemp == None):
         minTemp = "-80"
 
-    if (maxTemp == '' or MaxTemp == None):
+    if (maxTemp == '' or maxTemp == None):
         maxTemp = "140"
 
     cityState = "{}, {}".format(city, state)
@@ -71,10 +71,7 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
 
         tempResults = searcher.search(query2, filter=np, limit=None)
         rainResults = searcher.search(query2, filter=nr, limit=None)
-        print(rainResults)
-        print(tempResults)
         results = searcher.search(queryTest, limit=None)
-        print("LENGTH: of results", len(results))
         results.filter(tempResults)
         results.filter(rainResults)
         print("LENGTH: of results", len(results))
@@ -124,7 +121,6 @@ def results():
                 print(temp)
                 latnlon += "{},{},{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], i[2], i[3])
                 break;
-    latnlon = latnlon[:-1]
 
     fp.close()
     print("You searched for: " + query)
@@ -168,7 +164,7 @@ def city():
         temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
         if (splitL[1] == newArr[0].city and splitL[2] == newArr[0].state):
             print("{} = {}".format(i, splitL[1]))
-            latnlon += "{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], newArr[0].avgLow, newArr[0].avgHigh)
+            latnlon += "{},{},{},{},{},{}".format(temp[0], temp[1], temp[2], temp[3], newArr[0].avgLow, newArr[0].avgHigh)
             break
     latnlon = latnlon[:-1]
 

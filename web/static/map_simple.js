@@ -13,6 +13,8 @@ function initMap() {
   markers.push(newmarkers[0] + ", " + newmarkers[1]);
   markers.push(parseFloat(newmarkers[2]));
   markers.push(parseFloat(newmarkers[3]));
+  markers.push(parseFloat(newmarkers[4]));
+  markers.push(parseFloat(newmarkers[5]));
   console.log(markers)
 
   var mapOptions = {
@@ -29,9 +31,9 @@ function initMap() {
 
   var content = [
     '<center><div class="info_content">' +
-    '<h2>' + String(newmarkers[0]) + '</h2>' +
-    '<h4>' + 'Low: ' +  String(markLow) + '</h4>' +
-    '<h4>' + 'High: ' +  String(markHigh) + '</h4>' +
+    '<h2>' + String(markers[0]) + '</h2>' +
+    '<h4>' + 'Low: ' +  String(markers[3]) + '</h4>' +
+    '<h4>' + 'High: ' +  String(markers[4]) + '</h4>' +
     '</div></center>'
   ];
 
