@@ -1,3 +1,9 @@
+/*
+    This file is intended for pages that include the multi-marker Google Map.
+    Used on the client side to render a map with multiple markers.
+ */
+
+
 function initialize() {
     var map;
     var bounds = new google.maps.LatLngBounds();

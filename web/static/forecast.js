@@ -1,3 +1,8 @@
+/* 
+    This file is for rendering the 6 day weather forecast. It uses the World Weather Online API to retrieve the weather.
+*/
+
+
 API_ENDPOINT = "http://api.worldweatheronline.com/premium/v1/weather.ashx";
 API_KEY = "7826c9f4779b4375b89185008181207";
 var script = document.createElement(script);

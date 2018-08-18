@@ -32,6 +32,8 @@ class City:
         self.avgWindSpeed = avgWindSpeed
         self.avgTemp = avgTemp
 
+# This function returns the results from a query with the specified parameters. 
+# It returns an array of cities that matched the query, as well as all of the results returned for each city.
 def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, minRain, maxRain):
     searchTerm = re.sub('[^A-Za-z, ]+', '', searchTerm)
     print(searchTerm)
@@ -62,6 +64,7 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
     if (maxTemp == '' or maxTemp == None):
         maxTemp = "140"
 
+    # WHOOSH QUERIES TAKE PLACE HERE
     cityState = "{}, {}".format(city, state)
     print("searchterm: {}".format(searchTerm))
     with indexer.searcher() as searcher:
@@ -82,6 +85,7 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
         arr = []
         Cities = []
 
+        # Eliminates duplicate cities from showing up in results
         for line in results:
             found = False
             if (len(Cities) == 0):
@@ -121,19 +125,21 @@ def results():
         temp = [splitL[1],splitL[2], splitL[3], splitL[4].strip('\n')]
         for i in Cities:
             if (i[0].lower() == splitL[1].lower() and i[1].lower() == splitL[2].lower()):
+                # Get the latitude and longitude for each city
                 latnlon += "{},{},{},{},{},{},".format(temp[0], temp[1], temp[2], temp[3], i[2], i[3])
                 break;
 
     fp.close()
     print("You searched for: " + query)
     if (len(Cities) > 1):
+        # return the results page
         return render_template('results.html', latnlon=latnlon, query=query, results=Cities, result2=arr, searchterm=searchTerm, minTemp=minTemp, maxTemp=maxTemp, minRain=minRain, maxRain=maxRain, beginDate=beginDate, endDate=endDate)
     elif (len(Cities) == 0):
         return render_template('error.html')
     else:
         return render_template('city.html', latnlon=latnlon, results=arr)
 
-
+# City is for an individual city page
 @app.route('/city', methods=['GET'])
 def city():
     data = request.args
@@ -155,6 +161,7 @@ def city():
     newArr = []
     results, Cities, arr = querySearch(searchTerm, cityName, stateName, beginDate, endDate, minTemp, maxTemp, minRain, maxRain)
 
+    # This eliminates the cases like 'new york' where multiple results are returned when we search it
     if (len(Cities) > 1):
         for i in arr:
             if (i.city.lower() == cityName.lower() and i.state.lower() == stateName.lower()):
@@ -174,13 +181,13 @@ def city():
     fp.close()
 
     print(searchTerm)
-    print("IN CITIES")
     return render_template('city.html', latnlon=latnlon, results=newArr)
 
 @app.route('/<path:filename>')
 def sendfile(filename):
     return send_from_directory(app.static_folder, filename)
 
+# HOME PAGE
 @app.route('/', methods=['GET', 'POST'])
 def home():
     results, Cities, arr = querySearch("",'','', '', '', '', '', '', '')

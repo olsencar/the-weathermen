@@ -4,7 +4,7 @@ import config # Make your own config.py file to place you api key into
 import time
 import csv
 
-API_KEY = config.api_key
+API_KEY = "724372896dda4401acf181258182607"
 API_ENDPOINT = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
 DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -33,13 +33,14 @@ def get_api_count():
     file.close()
     return int(api_count)
 
+# Checks to see if the year specified is a leap year or not.
 def isLeapYear(year):
     tempYear = year - 2000
     if (tempYear % 4 == 0):
         return True
 
     return False
-
+# Gets the last day of the month
 def getEndDate(month, year):
     if (month == 2 and isLeapYear(year)):
         endDate = "{}/{}/29".format(year, month)
@@ -48,6 +49,7 @@ def getEndDate(month, year):
 
     return endDate
 
+#Creates a new weather object
 def createNewWeather(response, month, year, city, state):
     avgHigh = 0
     avgLow = 0
@@ -99,6 +101,7 @@ def createNewWeather(response, month, year, city, state):
 
     return Weather(date, city, state, avgHigh, avgLow, avgUV, totalSun, avgSun, totalSnow, avgSnow, totalRainfall, avgRainfall, avgHumidity, avgPressure, avgWindSpeed)
 
+# Gets the city and state name of the index specified
 def getCitiesAndStates(CITIES, STATES, indexStart, indexEnd):
     if (indexStart == 0):
         indexStart = 1
@@ -123,14 +126,15 @@ def main():
     print("If your start index is 0, make your end index 38")
     indexEnd = int(input("Ending city index: "))
 
-    getCitiesAndStates(CITIES, STATES, indexStart, indexEnd)
+    # getCitiesAndStates(CITIES, STATES, indexStart, indexEnd)
 
     cityCount = 0
     while (cityCount < (indexEnd - indexStart)):
-        month = 6
-        year = 2017
-        city = CITIES[cityCount]
-        state = STATES[cityCount]
+        month = 5
+        year = 2018
+        city = "Newport" # Medford, Bend, Newport
+        state = "Oregon"
+
         while ("{}/{}".format(year, month) != "2018/7"):
             if (month == 13):
                 month = 1
@@ -155,8 +159,8 @@ def main():
             data = json.loads(response.content)
             w = createNewWeather(data, month, year, city, state)
 
-            file = open("weather-data-new.csv", "a")
-            file.write("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(currentIndex, w.city, w.state, w.date, w.avgHigh, w.avgLow, w.uvIndex, w.totalSunHours, w.avgSunHours, w.totalSnow, w.avgSnow, w.totalRainfall, w.avgRainfall, w.avgHumidity, w.avgPressure, w.avgWindSpeed))
+            file = open("./weather_data/weather-data-complete.csv", "a")
+            file.write("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(308 + currentIndex, w.city, w.state, w.date, w.avgHigh, w.avgLow, w.uvIndex, w.totalSunHours, w.avgSunHours, w.totalSnow, w.avgSnow, w.totalRainfall, w.avgRainfall, w.avgHumidity, w.avgPressure, w.avgWindSpeed))
             file.close()
         
             month += 1

@@ -1,3 +1,9 @@
+/*
+    This file is intended for pages that include the single-marker Google Map.
+    Used on the client side to render a map with one marker.
+ */
+
+
 function initMap() {
   var map;
   var bounds = new google.maps.LatLngBounds();
