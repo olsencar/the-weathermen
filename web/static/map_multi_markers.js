@@ -1,3 +1,23 @@
+function changeInfoWindow() {
+    var infoWindow = document.getElementsByClassName('gm-style-iw');
+    var parent = infoWindow.parentElement;
+
+    parent.style.wordWrap = "normal";
+    parent.style.padding = "2px";
+    parent.style.width = "auto";
+}
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        if (value === undefined) {
+            value = "";
+        }
+        vars[key] = value;
+    });
+    return vars;
+}
+
 function initialize() {
     var map;
     var bounds = new google.maps.LatLngBounds();
@@ -26,23 +46,25 @@ function initialize() {
             temp.push(parseFloat(newmarkers[i - 2])); // Low
             temp.push(parseFloat(newmarkers[i - 1])); // High
             markers.push(temp);
-            console.log(temp)
         }
     }
     markers.shift()
     // Multiple Markers
 
-
-
     // Display multiple markers on a map
     var infoWindow = new google.maps.InfoWindow();
 
+    var params = getUrlVars();
     // Loop through our array of markers & place each one on the map
     for( i = 0; i < markers.length; i++ ) {
         // Info Window Content
+        var cityState = markers[i][0].split(',');
+        for (var j = 0; j < cityState.length; j++) {
+            cityState[j].trim();
+        }
         var content = [
           '<div class="info_content">' +
-          '<h2>' + String(markers[i][0]) + '</h2>' +
+          '<h2><a href="/city?searchterm=' + String(markers[i][0]) + '&city=' + cityState[0] + '&state=' + cityState[1] + '&beginDate=' + params['beginDate'] + '&endDate=' + params['endDate'] + '&minTemp=' + params['minTemp'] + '&maxTemp=' + params['maxTemp'] + '">' + String(markers[i][0]) + '</a></h2>' +
           '<h4>' + 'Min Temp: ' +  String(markers[i][3]) + '</h4>' +
           '<h4>' + 'Max Temp: ' +  String(markers[i][4]) + '</h4>' +
           '</div>'
@@ -87,4 +109,5 @@ function initialize() {
     // });
     google.maps.event.addDomListener(window, 'load', initialize)
 
+    changeInfoWindow();
 }

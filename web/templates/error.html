@@ -1,15 +1,26 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<title>Error</title>
-	</head>
 
-	<body>
-		<h1>No Results For Your Search Term </h1>
-		<form method="post" action="{{ url_for('home') }}">
-			<input type="submit" value="Return" />
-		</form>	
-	</body>	
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+	<!-- Required for bootstrap 3 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script defer src="{{url_for('static', filename='autocomplete.js')}}"></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="page-header">
+		<a href="/" class="a-no-underline"><h1 class="text-center">The Weathermen</h1></a>
+	</div>
+	{% include 'searchBar.html' %}
+	<div class="container">
+		<h3>No Results For Search: {{query}}</h3>
+	</div>
+</body>
+
 </html>

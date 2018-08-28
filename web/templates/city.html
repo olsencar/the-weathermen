@@ -1,85 +1,108 @@
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="{{url_for("static", filename="main.css")}}">
-		<!-- Required for bootstrap 3 -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script async defer src="{{url_for("static", filename="forecast.js")}}"></script>
 
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<!-- <script src="/static/map_simple.js"></script> -->
-		<title>The Weathermen | {{results[0].city}}</title>
-		<style>
-			.panel-body {
-				border: inherit;
-			}
-			#map {
-				height: 300px;
-				/* min-width: 900px; */
-				width: 100% !important;
-			}
-			.gm-style-iw {
-				width: 100% !important;
-				/* height: 100% !important; */
-				overflow: hidden !important;
-			}
-		</style>
-	</head>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+	<!-- Required for bootstrap 3 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script defer src="{{url_for('static', filename='autocomplete.js')}}"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<title>The Weathermen | {{results[0].city}}</title>
+	<style>
+		.panel-body {
+			border: inherit;
+		}
 
-	<body>
-		<div class="page-header">
-			<a href="/" class="a-no-underline"><h1 class="text-center">The Weathermen</h1></a>
-		</div>
-		<div class="container">
-			<h2 id="city-state">{{results[0].city}}, {{results[0].state}}</h2>
-		</div>
-		
-		<div class="container text-center">
-			<div id="map" data-lat-lon="{{latnlon}}" data-results={{results}} high={{results[0].avgHigh}} low={{results[0].avgLow}}></div>
-		</div>
-		<div id="forecast-container" class="container">
-			<h3>Six Day Weather Forecast</h3>
-			<div id="weather-forecast" class="row text-center"></div>
-		</div>		
-		<div class="container">
-			<h3>Past Weather Data</h3>
-			<table class="table table-bordered table-hover">
-				<th>Date</th>
-				<th>Avg Temp (&deg;F)</th>
-				<th>Avg High (&deg;F)</th>
-				<th>Avg Low (&deg;F)</th>
-				<th>Total Rainfall (inches)</th>
-				<th>Avg Rainfall (inches)</th>
-				<th>Avg Humidity (%)</th>
-				<th>Avg Pressure (mb)</th>
-				<th>Avg Windspeed (mph)</th>
-				<th>Total Snow (inches)</th>
-				<th>Avg Snow per day (inches)</th>
+		#map {
+			height: 300px;
+			/* min-width: 900px; */
+			width: 100% !important;
+		}
 
-				{% for date in results %}
-					<tr>
-						<td>{{date.date}}</td>
-						<td>{{date.avgTemp}}&deg;F</td>
-						<td>{{date.avgHigh}}&deg;F</td>
-						<td>{{date.avgLow}}&deg;F</td>						
-						<td>{{date.totalRainfall}}</td>
-						<td>{{date.avgRainfall}}</td>
-						<td>{{date.avgHumidity}}%</td>
-						<td>{{date.avgPressure}}</td>
-						<td>{{date.avgWindSpeed}}</td>
-						<td>{{date.totalSnow}}</td>
-						<td>{{date.avgSnow}}</td>
-					</tr>
-				{% endfor %}
-			</table>
-		</div>
-		<form method="get" action="{{ url_for('home') }}">
-			<input class="btn btn-default" type="submit" value="Return" />
-		</form>
+		.gm-style-iw {
+			text-align: left;
+			/* width: 100% !important; */
+			/* height: 100% !important; */
+			overflow: hidden !important;
+		}
+	</style>
+</head>
 
-		<script src="{{url_for("static", filename="map_simple.js")}}"></script>
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUFWCJQ7VquNihgeFJsPBbOkpwYIUxZa0&callback=initMap"></script>
-	</body>
+<body>
+	<div class="page-header">
+		<a href="/" class="a-no-underline"><h1 class="text-center">The Weathermen</h1></a>
+	</div>
+	{% include 'searchBar.html' %}
+	<div class="container">
+		<h2 id="city-state">{{results[0].city}}, {{results[0].state}}</h2>
+	</div>
+
+	<div class="container text-center">
+		<div id="map" data-lat-lon="{{latnlon}}" data-results={{results}} high={{results[0].avgHigh}} low={{results[0].avgLow}}></div>
+	</div>
+	<div id="forecast-container" class="container">
+		<h3>Six Day Weather Forecast</h3>
+		<div id="weather-forecast" class="row text-center">
+			{% for item in forecast['forecast']['forecastday'] %}
+			<div class='col-md-2 panel panel-default text-left'>
+				<div class='attr-container panel-heading text-center'>
+					<h4>{{item['date']}}</h4>
+				</div>
+				<div class='attr-container panel-body'>
+					<div class="img-container text-center">
+						<img class='col' src="{{item['day']['condition']['icon']}}"> 
+					</div>
+					<div class='attr-container text-center'>
+						<h4 class='no-pad high-temp'><strong>{{ item['day']['maxtemp_f'] }}</strong></h4>
+						<h4 class='no-pad low-temp'><strong>{{ item['day']['mintemp_f'] }}</strong></h4>
+					</div> 
+				</div>
+				<div class='attr-container panel-body'>{{ item['day']['condition']['text'] }}</div>
+				<div class='attr-container panel-body'><strong> UV Index: </strong>{{ item['day']['uv'] }}</div>
+				<div class='attr-container panel-body'><strong> Wind: </strong>{{ item['day']['maxwind_mph'] }} MPH</div>
+				<div class='attr-container panel-body'><strong>Sunrise:</strong> {{ item['astro']['sunrise'] }}<br><strong>Sunset:</strong> {{ item['astro']['sunset'] }}</div>
+				<div class='attr-container panel-body'><strong>Moonrise:</strong> {{ item['astro']['moonrise'] }}<br><strong>Moonset:</strong> {{ item['astro']['moonset'] }}</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="container">
+		<h3>Past Weather Data</h3>
+		<table class="table table-bordered table-hover">
+			<th>Date</th>
+			<th>Avg Temp (&deg;F)</th>
+			<th>Avg High (&deg;F)</th>
+			<th>Avg Low (&deg;F)</th>
+			<th>Total Rainfall (inches)</th>
+			<th>Avg Rainfall (inches)</th>
+			<th>Avg Humidity (%)</th>
+			<th>Avg Pressure (mb)</th>
+			<th>Avg Windspeed (mph)</th>
+			<th>Total Snow (inches)</th>
+			<th>Avg Snow per day (inches)</th>
+
+			{% for date in results %}
+			<tr>
+				<td>{{date.date}}</td>
+				<td>{{date.avgTemp}}&deg;F</td>
+				<td>{{date.avgHigh}}&deg;F</td>
+				<td>{{date.avgLow}}&deg;F</td>
+				<td>{{date.totalRainfall}}</td>
+				<td>{{date.avgRainfall}}</td>
+				<td>{{date.avgHumidity}}%</td>
+				<td>{{date.avgPressure}}</td>
+				<td>{{date.avgWindSpeed}}</td>
+				<td>{{date.totalSnow}}</td>
+				<td>{{date.avgSnow}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+
+	<script src="{{url_for("static", filename="map_simple.js")}}"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUFWCJQ7VquNihgeFJsPBbOkpwYIUxZa0&callback=initMap"></script>
+</body>
+
 </html>

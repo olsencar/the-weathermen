@@ -30,11 +30,11 @@ function initMap() {
   var infoWindow = new google.maps.InfoWindow();
 
   var content = [
-    '<center><div class="info_content">' +
+    '<div class="info_content">' +
     '<h2>' + String(markers[0]) + '</h2>' +
     '<h4>' + 'Low: ' +  String(markers[3]) + '</h4>' +
     '<h4>' + 'High: ' +  String(markers[4]) + '</h4>' +
-    '</div></center>'
+    '</div>'
   ];
 
   var position = new google.maps.LatLng(markers[1], markers[2]);

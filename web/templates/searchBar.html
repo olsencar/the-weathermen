@@ -1,0 +1,38 @@
+<form method="get" autocomplete="off" action="{{ url_for('results') }}" class="input-group center-block">
+    <div class="container">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <a href="#filter-container" id="filter-btn" class="btn btn-default" data-toggle="collapse">Filter</a>
+            </span>
+            <input type="text" placeholder="Search for city, state" id="searchbar" class="form-control" name="searchterm">
+            <span class="input-group-btn">
+                <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+            </span>
+        </div>
+    </div>
+    <div id="filter-container" class="container collapse">
+        <div id="filter">
+            <div id="dates" class="input-group">
+                <label for="begin-date">Begin Date:</label>
+                <input type="month" id="begin-date" class="form-option" name="beginDate">
+
+                <label for="end-date">End Date:</label>
+                <input type="month" id="end-date" class="form-option" name="endDate">
+            </div>
+            <div id="temps" class="input-group">
+                <label for="min-temp">Minimum Temp (F)</label>
+                <input type="number" id="min-temp" class="form-option" min=-80 max=140 name="minTemp">
+
+                <label for="max-temp">Maximum Temp (F)</label>
+                <input type="number" id="max-temp" class="form-option" min=-80 max=140 name="maxTemp">
+            </div>
+            <div id="rains" class="input-group">
+                <label for="min-rain">Minimum Avg Rain (in)</label>
+                <input type="number" step="0.01" id="min-temp" class="form-option" min=0 max=1000 name="minRain">
+
+                <label for="max-rain">Maximum Avg Rain (in)</label>
+                <input type="number" step ="0.01" id="max-temp" class="form-option" min=0 max=1000 name="maxRain">
+            </div>
+        </div>
+    </div>
+  </form>

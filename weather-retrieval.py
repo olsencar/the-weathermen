@@ -99,18 +99,18 @@ def createNewWeather(response, month, year, city, state):
 
     return Weather(date, city, state, avgHigh, avgLow, avgUV, totalSun, avgSun, totalSnow, avgSnow, totalRainfall, avgRainfall, avgHumidity, avgPressure, avgWindSpeed)
 
-def getCitiesAndStates(CITIES, STATES, indexStart, indexEnd):
-    if (indexStart == 0):
-        indexStart = 1
+# def getCitiesAndStates(CITIES, STATES, indexStart, indexEnd):
+    # if (indexStart == 0):
+    #     indexStart = 1
 
-    with open('locations.csv', 'r', encoding="utf8") as f:
-        reader = csv.reader(f)
-        i = 0
-        for row in reader:
-            if (i >= indexStart and i <= indexEnd):
-                CITIES.append(row[1])
-                STATES.append(row[2])
-            i += 1
+    # with open('locations.csv', 'r', encoding="utf8") as f:
+    #     reader = csv.reader(f)
+    #     i = 0
+    #     for row in reader:
+    #         if (i >= indexStart and i <= indexEnd):
+    #             CITIES.append(row[1])
+    #             STATES.append(row[2])
+    #         i += 1
 
 def main():
     CITIES = []
@@ -123,14 +123,15 @@ def main():
     print("If your start index is 0, make your end index 38")
     indexEnd = int(input("Ending city index: "))
 
-    getCitiesAndStates(CITIES, STATES, indexStart, indexEnd)
+    # getCitiesAndStates(CITIES, STATES, indexStart, indexEnd)
 
     cityCount = 0
     while (cityCount < (indexEnd - indexStart)):
-        month = 6
-        year = 2017
-        city = CITIES[cityCount]
-        state = STATES[cityCount]
+        month = 5
+        year = 2018
+        city = "Newport" # Medford, Bend, Newport
+        state = "Oregon"
+
         while ("{}/{}".format(year, month) != "2018/7"):
             if (month == 13):
                 month = 1
@@ -155,8 +156,8 @@ def main():
             data = json.loads(response.content)
             w = createNewWeather(data, month, year, city, state)
 
-            file = open("weather-data-new.csv", "a")
-            file.write("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(currentIndex, w.city, w.state, w.date, w.avgHigh, w.avgLow, w.uvIndex, w.totalSunHours, w.avgSunHours, w.totalSnow, w.avgSnow, w.totalRainfall, w.avgRainfall, w.avgHumidity, w.avgPressure, w.avgWindSpeed))
+            file = open("./weather_data/weather-data-complete.csv", "a")
+            file.write("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(308 + currentIndex, w.city, w.state, w.date, w.avgHigh, w.avgLow, w.uvIndex, w.totalSunHours, w.avgSunHours, w.totalSnow, w.avgSnow, w.totalRainfall, w.avgRainfall, w.avgHumidity, w.avgPressure, w.avgWindSpeed))
             file.close()
         
             month += 1

@@ -1,0 +1,46 @@
+new york,n,ne,new,new ,new y,new yo,new yor,ny,newyork
+california,c,ca,cal,cali,calif,califo,califor,californ,californi
+illinois,i,il,ill,illi,illin,illino,illinoi
+texas,tx,t,te,tex,texa
+arizona,az,a,ar,ari,ariz,arizo,arizon
+pennsylvania,p,pe,pen,penn,penns,pennsy,pennsyl,pennsylv,pennsylva,pennsylvan,pennsylvani
+florida,f,fl,flo,flor,flori,florid
+ohio,o,oh,ohi
+indiana,i,in,ind,indi,india,indian
+north carolina,n,no,nor,nort,north,north ,north c,north ca,north car,north caro,north carol,north caroli,north carolin,nc,northcarolina
+washington,w,wa,was,wash,washi,washin,washing,washingt,washingto
+colorado,c,co,col,colo,color,colora,colorad
+district of columbia,dc,d,di,dis,dist,distr,distri,distric,district,district ,district o,district of,district of ,district of c,district of co,district of col,district of colu,district of colum,district of columb,district of columbi,do,districtof
+massachusetts,m,ma,mas,mass,massa,massac,massach,massachu,massachus,massachuse,massachuset,massachusett
+michigan,m,mi,mic,mich,michi,michig,michiga
+tennessee,tn,t,te,ten,tenn,tenne,tennes,tenness,tennesse
+oregon,o,or,ore,oreg,orego
+oklahoma,o,ok,okl,okla,oklah,oklaho,oklahom
+nevada,nv,n,ne,nev,neva,nevad
+kentucky,ky,k,ke,ken,kent,kentu,kentuc,kentuck
+maryland,m,ma,mar,mary,maryl,maryla,marylan
+wisconsin,w,wi,wis,wisc,wisco,wiscon,wiscons,wisconsi
+new mexico,n,ne,new,new ,new m,new me,new mex,new mexi,new mexic,nm,newmexico
+missouri,m,mi,mis,miss,misso,missou,missour
+georgia,g,ge,geo,geor,georg,georgi
+nebraska,n,ne,neb,nebr,nebra,nebras,nebrask
+virginia,va,v,vi,vir,virg,virgi,virgin,virgini
+minnesota,m,mi,min,minn,minne,minnes,minneso,minnesot
+louisiana,l,lo,lou,loui,louis,louisi,louisia,louisian
+kansas,k,ka,kan,kans,kansa
+hawaii,h,ha,haw,hawa,hawai
+alaska,a,al,ala,alas,alask
+new jersey,n,ne,new,new ,new j,new je,new jer,new jers,new jerse,nj,newjersey
+idaho,i,id,ida,idah
+iowa,i,io,iow
+alabama,a,al,ala,alab,alaba,alabam
+utah,u,ut,uta
+arkansas,a,ar,ark,arka,arkan,arkans,arkansa
+rhode island,r,rh,rho,rhod,rhode,rhode ,rhode i,rhode is,rhode isl,rhode isla,rhode islan,ri,rhodeisland
+south dakota,s,so,sou,sout,south,south ,south d,south da,south dak,south dako,south dakot,sd,southdakota
+mississippi,m,mi,mis,miss,missi,missis,mississ,mississi,mississip,mississipp
+connecticut,c,co,con,conn,conne,connec,connect,connecti,connectic,connecticu
+south carolina,s,so,sou,sout,south,south ,south c,south ca,south car,south caro,south carol,south caroli,south carolin,sc,southcarolina
+north dakota,n,no,nor,nort,north,north ,north d,north da,north dak,north dako,north dakot,nd,northdakota
+new hampshire,n,ne,new,new ,new h,new ha,new ham,new hamp,new hamps,new hampsh,new hampshi,new hampshir,nh,newhampshire
+montana,m,mo,mon,mont,monta,montan
