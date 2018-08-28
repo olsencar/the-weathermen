@@ -4,7 +4,7 @@ import config # Make your own config.py file to place you api key into
 import time
 import csv
 
-API_KEY = config.api_key
+API_KEY = "724372896dda4401acf181258182607"
 API_ENDPOINT = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx"
 DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -33,13 +33,14 @@ def get_api_count():
     file.close()
     return int(api_count)
 
+# Checks to see if the year specified is a leap year or not.
 def isLeapYear(year):
     tempYear = year - 2000
     if (tempYear % 4 == 0):
         return True
 
     return False
-
+# Gets the last day of the month
 def getEndDate(month, year):
     if (month == 2 and isLeapYear(year)):
         endDate = "{}/{}/29".format(year, month)
@@ -48,6 +49,7 @@ def getEndDate(month, year):
 
     return endDate
 
+#Creates a new weather object
 def createNewWeather(response, month, year, city, state):
     avgHigh = 0
     avgLow = 0
@@ -99,18 +101,19 @@ def createNewWeather(response, month, year, city, state):
 
     return Weather(date, city, state, avgHigh, avgLow, avgUV, totalSun, avgSun, totalSnow, avgSnow, totalRainfall, avgRainfall, avgHumidity, avgPressure, avgWindSpeed)
 
-# def getCitiesAndStates(CITIES, STATES, indexStart, indexEnd):
-    # if (indexStart == 0):
-    #     indexStart = 1
+# Gets the city and state name of the index specified
+def getCitiesAndStates(CITIES, STATES, indexStart, indexEnd):
+    if (indexStart == 0):
+        indexStart = 1
 
-    # with open('locations.csv', 'r', encoding="utf8") as f:
-    #     reader = csv.reader(f)
-    #     i = 0
-    #     for row in reader:
-    #         if (i >= indexStart and i <= indexEnd):
-    #             CITIES.append(row[1])
-    #             STATES.append(row[2])
-    #         i += 1
+    with open('locations.csv', 'r', encoding="utf8") as f:
+        reader = csv.reader(f)
+        i = 0
+        for row in reader:
+            if (i >= indexStart and i <= indexEnd):
+                CITIES.append(row[1])
+                STATES.append(row[2])
+            i += 1
 
 def main():
     CITIES = []

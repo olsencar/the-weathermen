@@ -149,7 +149,10 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
 
     if (maxTemp == '' or maxTemp == None):
         maxTemp = "140"
-    
+
+    # WHOOSH QUERIES TAKE PLACE HERE
+    cityState = "{}, {}".format(city, state)
+    print("searchterm: {}".format(searchTerm))
     with indexer.searcher() as searcher:
         queryTest = MultifieldParser(["City", "State", "Date"], schema=indexer.schema).parse(searchTerm)
         
@@ -168,6 +171,7 @@ def querySearch(searchTerm, city, state, beginDate, endDate, minTemp, maxTemp, m
         arr = []
         Cities = []
 
+        # Eliminates duplicate cities from showing up in results
         for line in results:
             found = False
             if (len(Cities) == 0):
@@ -203,6 +207,7 @@ def search():
 @app.route('/results', methods=['GET', 'POST'])
 def results():
     data = request.args
+    print(data)
     query = data.get('searchterm')
     cityName = data.get('city')
     stateName = data.get('state')
@@ -228,7 +233,8 @@ def results():
     fp.close()
     print("You searched for: " + query)
     if (len(Cities) > 1):
-        return render_template('results.html', latnlon=latnlon, query=query, results=Cities, result2=arr, searchterm=searchTerm, minTemp=minTemp, maxTemp=maxTemp, beginDate=beginDate, endDate=endDate, minRain=minRain, maxRain=maxRain)
+        # return the results page
+        return render_template('results.html', latnlon=latnlon, query=query, results=Cities, result2=arr, searchterm=searchTerm, minTemp=minTemp, maxTemp=maxTemp, minRain=minRain, maxRain=maxRain, beginDate=beginDate, endDate=endDate)
     elif (len(Cities) == 0):
         return render_template('error.html', query=query)
     else:
@@ -239,10 +245,11 @@ def results():
             item['date'] = datetime.strftime(date, "%a, %b %d")
         return render_template('city.html', latnlon=latnlon, results=arr, forecast=data)
 
-
-@app.route('/city', methods=['GET', 'POST'])
+# City is for an individual city page
+@app.route('/city', methods=['GET'])
 def city():
     data = request.args
+    print(data)
     minRain = data.get('minRain')
     maxRain = data.get('maxRain')
     cityName = data.get('city')
@@ -260,6 +267,7 @@ def city():
     newArr = []
     results, Cities, arr = querySearch(searchTerm, cityName, stateName, beginDate, endDate, minTemp, maxTemp, minRain, maxRain)
 
+    # This eliminates the cases like 'new york' where multiple results are returned when we search it
     if (len(Cities) > 1):
         for i in arr:
             if (i.city.lower() == cityName.lower() and i.state.lower() == stateName.lower()):
@@ -289,6 +297,7 @@ def city():
 def sendfile(filename):
     return send_from_directory(app.static_folder, filename)
 
+# HOME PAGE
 @app.route('/', methods=['GET', 'POST'])
 def home():
     results, Cities, arr = querySearch("",'','', '', '', '', '', '', '')
